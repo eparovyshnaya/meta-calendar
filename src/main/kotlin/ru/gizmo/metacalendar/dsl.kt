@@ -1,7 +1,5 @@
 package ru.gizmo.metacalendar
 
-import java.util.*
-
 @DslMarker
 annotation class MetaCalendarDsl
 
@@ -19,19 +17,9 @@ object calendar {
 class ConstructionContext {
     val calendar = MetaCalendar()
 
-    fun period(from: String, till: String, note: Any? = null): Unit =
-            PeriodContext(from, till, note).let {
-                it.period()?.let { period -> calendar.addPeriod(period) }
-            }
-
-    @MetaCalendarDsl
-    class PeriodContext(private val from: String,
-                        private val till: String,
-                        private val note: Any?) {
-        fun period(): Period? {
-            val start = dayMark(from) ?: return null
-            val end = dayMark(till) ?: return null
-            return Period(start, end, note)
-        }
-    }
+    fun period(from: String, till: String, note: Any? = null) =
+            calendar.addPeriod(Period(
+                    ParsedDayMark(from).mark(),
+                    ParsedDayMark(till).mark(),
+                    note))
 }

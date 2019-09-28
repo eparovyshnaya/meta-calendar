@@ -7,6 +7,7 @@ import java.time.ZoneId
 abstract class DayMark {
     abstract val monthNo: Month
     abstract val note: Any?
+    // todo: no resolution facilities should reside here in model, extract to separate interfaces
     open fun resolve(year: Int, zone: ZoneId, startOfADay: Boolean = true) = resolvedMark(year, zone, startOfADay).date()
 
     internal abstract fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean): MarkResolved
@@ -70,8 +71,8 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
 class MetaCalendar {
     private val periods = mutableSetOf<Period>()
 
-    fun addPeriod(period: Period) = run { periods.add(period) }
-    fun removePeriod(period: Period) = run { periods.remove(period) }
+    fun addPeriod(period: Period): Unit = run { periods.add(period) }
+    fun removePeriod(period: Period): Unit = run { periods.remove(period) }
     fun periods(): Set<Period> = periods
 }
 

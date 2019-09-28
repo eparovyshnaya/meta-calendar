@@ -3,6 +3,8 @@ package ru.gizmo.metacalendar
 import java.time.*
 import java.time.temporal.ChronoField
 
+open class MetaCalendarResolveException(message: String, cause: Throwable? = null) : Exception(message, cause)
+
 internal sealed class MarkResolved {
     abstract fun date(): ZonedDateTime
 

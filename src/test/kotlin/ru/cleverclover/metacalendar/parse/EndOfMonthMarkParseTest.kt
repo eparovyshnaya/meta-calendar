@@ -1,9 +1,7 @@
-package ru.gizmo.metacalendar.parse
+package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
-import ru.gizmo.metacalendar.*
-import java.time.DayOfWeek
+import ru.cleverclover.metacalendar.*
 import java.time.Month
 
 class EndOfMonthMarkParseTest {

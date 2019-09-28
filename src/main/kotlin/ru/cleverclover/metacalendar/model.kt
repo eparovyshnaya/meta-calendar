@@ -1,4 +1,4 @@
-package ru.gizmo.metacalendar
+package ru.cleverclover.metacalendar
 
 import java.time.DayOfWeek
 import java.time.Month

@@ -1,7 +1,7 @@
-package ru.gizmo.metacalendar.resolve
+package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.gizmo.metacalendar.LastWeekdayInMonth
+import ru.cleverclover.metacalendar.LastWeekdayInMonth
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month

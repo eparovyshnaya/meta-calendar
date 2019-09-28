@@ -1,11 +1,10 @@
-package ru.gizmo.metacalendar.parse
+package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.gizmo.metacalendar.LastWeekdayInMonth
-import ru.gizmo.metacalendar.MetaCalendarParseException
-import ru.gizmo.metacalendar.ParsedDayMark
-import ru.gizmo.metacalendar.WeekdayInMonth
+import ru.cleverclover.metacalendar.MetaCalendarParseException
+import ru.cleverclover.metacalendar.ParsedDayMark
+import ru.cleverclover.metacalendar.WeekdayInMonth
 import java.time.DayOfWeek
 import java.time.Month
 

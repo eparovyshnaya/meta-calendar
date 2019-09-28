@@ -1,4 +1,4 @@
-# Package ru.gizmo.metacalendar
+# Package ru.cleverclover.metacalendar
 
 #####Meta calendar
 Imagine you want to remember a birthday of a friend, 

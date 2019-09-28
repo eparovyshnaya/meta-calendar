@@ -1,8 +1,8 @@
-package ru.gizmo.metacalendar.resolve
+package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.gizmo.metacalendar.DayOfMonth
+import ru.cleverclover.metacalendar.DayOfMonth
 import java.lang.Exception
 import java.time.LocalDate
 import java.time.Month

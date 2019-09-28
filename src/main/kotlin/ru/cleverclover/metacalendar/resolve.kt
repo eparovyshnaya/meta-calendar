@@ -1,4 +1,4 @@
-package ru.gizmo.metacalendar
+package ru.cleverclover.metacalendar
 
 import java.time.*
 import java.time.temporal.ChronoField

@@ -1,6 +1,4 @@
-package ru.gizmo.metacalendar.api
-
-import org.junit.jupiter.api.Test
+package ru.cleverclover.metacalendar.api
 
 class ModelApiTest {
     //todo: test removes here ) no one else needs it

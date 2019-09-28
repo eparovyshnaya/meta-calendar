@@ -1,6 +1,6 @@
-package ru.gizmo.metacalendar.resolve
+package ru.cleverclover.metacalendar.resolve
 
-import ru.gizmo.metacalendar.DayMark
+import ru.cleverclover.metacalendar.DayMark
 import java.time.*
 
 abstract class ResolutionTest {

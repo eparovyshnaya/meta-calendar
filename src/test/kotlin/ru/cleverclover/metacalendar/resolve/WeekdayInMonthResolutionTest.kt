@@ -1,7 +1,7 @@
-package ru.gizmo.metacalendar.resolve
+package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.gizmo.metacalendar.WeekdayInMonth
+import ru.cleverclover.metacalendar.WeekdayInMonth
 import java.time.*
 
 /**

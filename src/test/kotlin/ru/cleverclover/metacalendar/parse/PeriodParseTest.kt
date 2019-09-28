@@ -1,10 +1,10 @@
-package ru.gizmo.metacalendar.parse
+package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.gizmo.metacalendar.DayOfMonth
-import ru.gizmo.metacalendar.MetaCalendarParseException
-import ru.gizmo.metacalendar.ParsedPeriod
+import ru.cleverclover.metacalendar.DayOfMonth
+import ru.cleverclover.metacalendar.MetaCalendarParseException
+import ru.cleverclover.metacalendar.ParsedPeriod
 import java.time.Month
 
 class PeriodParseTest {

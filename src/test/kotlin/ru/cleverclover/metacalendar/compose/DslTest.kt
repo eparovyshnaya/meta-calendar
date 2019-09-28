@@ -1,8 +1,8 @@
-package ru.gizmo.metacalendar.compose
+package ru.cleverclover.metacalendar.compose
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.assertTrue
-import ru.gizmo.metacalendar.*
+import ru.cleverclover.metacalendar.*
 import java.time.DayOfWeek
 import java.time.Month
 

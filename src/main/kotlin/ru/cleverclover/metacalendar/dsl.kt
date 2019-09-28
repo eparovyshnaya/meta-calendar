@@ -1,4 +1,4 @@
-package ru.gizmo.metacalendar
+package ru.cleverclover.metacalendar
 
 @DslMarker
 annotation class MetaCalendarDsl

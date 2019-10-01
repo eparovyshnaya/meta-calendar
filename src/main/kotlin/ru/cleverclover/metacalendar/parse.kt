@@ -20,7 +20,12 @@ import java.time.Month
  * */
 open class MetaCalendarParseException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
-class ParsedPeriod(private val origin: String) {
+/**
+ * The parsing for a natural language string to a [MetaCalendar]'s [Period]
+ *
+ * Sample input is *с конца февраля по третий вторник августа*
+ * */
+internal class ParsedPeriod(private val origin: String) {
 
     fun period(): Period {
         val matcher = periodDefinition.matchEntire(origin)
@@ -31,7 +36,8 @@ class ParsedPeriod(private val origin: String) {
     }
 }
 
-class ParsedDayMark(private val origin: String) {
+internal class ParsedDayMark(private val origin: String) {
+
     fun mark(): DayMark {
         dayMarkParsers.forEach { parser ->
             parser(origin)?.let { return it }
@@ -43,12 +49,12 @@ class ParsedDayMark(private val origin: String) {
 
 // todo: get rid of all this ugly STATIC stuff
 
-/**
+/*
  * All these parsers should not fail - we try them in a sequence to check if someone fits.
  *
  * Looks pretty much like a _chain of responsibility_ pattern.
- * */
-private val dayMarkParsers = listOf( // todo: open it for extension
+ */
+private val dayMarkParsers = listOf(
         { origin: String ->
             dayOfMonthMarkDefinition.matchEntire(origin)?.let {
                 val month = findConstant(it.groupValues[2], monthNameToEnum) as Month

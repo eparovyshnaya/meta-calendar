@@ -39,7 +39,6 @@ class DslTest {
                         till = "конец октября",
                         note = "Halloween!"
                 )
-
             }
 
     private fun assertPeriodsAreOk(calendar: MetaCalendar, expectedPeriods: Set<Period>) = with(calendar.periods()) {

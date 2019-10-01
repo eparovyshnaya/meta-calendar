@@ -84,21 +84,19 @@ internal class PeriodResolved(private val period: Period,
                               private val year: Int,
                               private val zone: ZoneId) {
     fun periods(): Set<Pair<ZonedDateTime, ZonedDateTime>> = with(period) {
-        val crossYearPeriod = start.monthNo > end.monthNo
+        val thisYearStart = start.resolve(year, zone)
+        val thisYearEnd = end.resolve(year, zone, false)
+        val crossYearPeriod = thisYearStart > thisYearEnd
         if (crossYearPeriod) {
             setOf(
                     Pair(
                             start.resolve(year - 1, zone),
-                            end.resolve(year, zone, false)),
+                            thisYearEnd),
                     Pair(
-                            start.resolve(year, zone),
+                            thisYearStart,
                             end.resolve(year + 1, zone, false)))
         } else {
-            setOf(
-                    Pair(
-                            start.resolve(year, zone),
-                            end.resolve(year, zone, false)))
-
+            setOf(Pair(thisYearStart, thisYearEnd))
         }
     }
 }

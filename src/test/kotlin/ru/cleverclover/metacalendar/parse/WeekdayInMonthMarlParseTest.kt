@@ -15,17 +15,22 @@ class WeekdayInMonthMarlParseTest {
                     WeekdayInMonth(Month.NOVEMBER, 3, DayOfWeek.TUESDAY))
 
     @Test
-    fun failsOnDaNo() {
+    fun incorrectFormatFails() {
+        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю").mark() }
+    }
+
+    @Test
+    fun outOfBoundDayNoFails() {
         assertThrows<MetaCalendarParseException> { ParsedDayMark("пятый вторник ноября").mark() }
     }
 
     @Test
-    fun failsOnDayName() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй ворник ноября").mark() }
+    fun incorrectDayOfWeekFails() {
+        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй хрю-хрю ноября").mark() }
     }
 
     @Test
-    fun failsOnMonth() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй вторник нбр").mark() }
+    fun incorrectMonthfails() {
+        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй вторник хрюкабря").mark() }
     }
 }

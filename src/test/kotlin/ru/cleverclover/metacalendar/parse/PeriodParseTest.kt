@@ -10,7 +10,7 @@ import java.time.Month
 class PeriodParseTest {
 
     @Test
-    fun periodParsed() {
+    fun parsed() {
         val origin = "с 1 января по 8 января"
         val period = ParsedPeriod(origin).period()
         assert(period.start == DayOfMonth(Month.JANUARY, 1)) {
@@ -22,7 +22,7 @@ class PeriodParseTest {
     }
 
     @Test
-    fun periodParsingFailsOnContract() {
+    fun incorrectFormatFails() {
         val origin = "от 1 января до 8 января"
         assertThrows<MetaCalendarParseException> {
             ParsedPeriod(origin).period()
@@ -30,8 +30,8 @@ class PeriodParseTest {
     }
 
     @Test
-    fun periodParsingFailsOnDayMark() {
-        val origin = "c 32 января по 8 февраля"
+    fun incorrectDayMarkFails() {
+        val origin = "с 32 января по 8 февраля"
         assertThrows<MetaCalendarParseException> {
             ParsedPeriod(origin).period()
         }

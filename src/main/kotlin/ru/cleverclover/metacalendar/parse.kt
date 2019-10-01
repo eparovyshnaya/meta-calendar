@@ -3,6 +3,21 @@ package ru.cleverclover.metacalendar
 import java.time.DayOfWeek
 import java.time.Month
 
+/**
+ * As parsing success highly depends on an input quality,
+ * each atomic parse operation can potentially fail for, say, external reasons.
+ *
+ * In case of input-driven error there is no way we can proceed with this particular atom,
+ * id est we do not tolerate the input issues, do not produce empty or default units, do not log, do not deduce and sophisticate.
+ *
+ * *We fail aloud.*
+ *
+ * Nevertheless, you can implement a tolerant reader for a calendar as a whole,
+ * processing atomic failures one at a time,
+ * if your domain contain a solution for the case.
+ *
+ * This domain-specific exception covers any parsing issue.
+ * */
 open class MetaCalendarParseException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
 class ParsedPeriod(private val origin: String) {
@@ -28,12 +43,21 @@ class ParsedDayMark(private val origin: String) {
 
 // todo: get rid of all this ugly STATIC stuff
 
+/**
+ * All these parsers should not fail - we try them in a sequence to check if someone fits.
+ *
+ * Looks pretty much like a _chain of responsibility_ pattern.
+ * */
 private val dayMarkParsers = listOf( // todo: open it for extension
         { origin: String ->
             dayOfMonthMarkDefinition.matchEntire(origin)?.let {
-                DayOfMonth(
-                        monthNo = findConstant(it.groupValues[2], monthNameToEnum) as Month,
-                        dayNo = it.groupValues[1].toInt())
+                val month = findConstant(it.groupValues[2], monthNameToEnum) as Month
+                val day = it.groupValues[1].toInt()
+                if (day in 1..monthLastDay[month]!!) {
+                    DayOfMonth(monthNo = month, dayNo = day)
+                } else {
+                    null
+                }
             }
         },
         { origin: String ->
@@ -59,7 +83,7 @@ private val dayMarkParsers = listOf( // todo: open it for extension
         }
 )
 
-private fun findConstant(name: String, constants: Map<String, *>) = constants.asSequence().first { name.startsWith(it.key) }.value
+private fun findConstant(name: String, constants: Map<String, *>) = constants.asSequence().first() { name.startsWith(it.key) }.value
 
 private val monthNameToEnum = mapOf(
         "янв" to Month.JANUARY,
@@ -89,6 +113,20 @@ private val weekTextToNumber = mapOf(
         "втор" to 2,
         "трет" to 3,
         "чет" to 4)
+
+private val monthLastDay = mapOf(
+        Month.JANUARY to 31,
+        Month.FEBRUARY to 29,
+        Month.MARCH to 31,
+        Month.APRIL to 30,
+        Month.MAY to 31,
+        Month.JUNE to 30,
+        Month.JULY to 31,
+        Month.AUGUST to 31,
+        Month.SEPTEMBER to 30,
+        Month.OCTOBER to 31,
+        Month.NOVEMBER to 30,
+        Month.DECEMBER to 31)
 
 //todo: get those from maps keysets
 private const val groupMonth = "(янв.*|февр.*|март.*|апр.*|мая|июн.*|июл.*|авг.*|сен.*|окт.*|ноя.*|дек.*)"

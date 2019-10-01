@@ -24,7 +24,7 @@ class ParsedPeriod(private val origin: String) {
 
     fun period(): Period {
         val matcher = periodDefinition.matchEntire(origin)
-                ?: throw MetaCalendarParseException("no period definition")
+                ?: throw MetaCalendarParseException("no periods definition")
         return Period(
                 ParsedDayMark(matcher.groups[1]!!.value).mark(),
                 ParsedDayMark(matcher.groups[2]!!.value).mark())

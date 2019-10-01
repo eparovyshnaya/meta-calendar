@@ -23,6 +23,6 @@ class DayOfMonthMarkParseTest {
 
     @Test
     fun unknownMonthFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("33 хрюкабря").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark("24 хрюкабря").mark() }
     }
 }

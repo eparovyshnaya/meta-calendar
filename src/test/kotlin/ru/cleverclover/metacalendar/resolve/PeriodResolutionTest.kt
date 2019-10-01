@@ -22,7 +22,7 @@ class PeriodResolutionTest : ResolutionTest() {
         val resolved = period.resolve(year, zone)
 
         // then
-        assert(resolved.size == 2) { "Cross-year period $period should be resolved twice, but we have $resolved" }
+        assert(resolved.size == 2) { "Cross-year periods $period should be resolved twice, but we have $resolved" }
         val expectation = setOf(
                 Pair(
                         ZonedDateTime.of(LocalDate.of(year - 1, Month.AUGUST, 2), startingHour, zone),
@@ -53,7 +53,7 @@ class PeriodResolutionTest : ResolutionTest() {
         val resolved = period.resolve(year, zone)
 
         // then
-        assert(resolved.size == 1) { "The period $period does not cross the year, should be resolved one, but we have $resolved" }
+        assert(resolved.size == 1) { "The periods $period does not cross the year, should be resolved one, but we have $resolved" }
         val expectation = setOf(Pair(
                 ZonedDateTime.of(LocalDate.of(year, Month.JANUARY, 8), startingHour, zone),
                 ZonedDateTime.of(LocalDate.of(year, Month.AUGUST, 2), endingHour, zone)))

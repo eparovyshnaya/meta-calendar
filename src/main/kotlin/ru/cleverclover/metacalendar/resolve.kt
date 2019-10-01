@@ -78,14 +78,14 @@ private fun firstDayOfNextMonth(mark: DayMark, year: Int): LocalDate {
 }
 
 /**
- * If a meta-period crosses a start-of-a-year, then it appears twice in the final resolution.
+ * If a meta-periods crosses a start-of-a-year, then it appears twice in the final resolution.
  *
- * Resolved period starts with the first day's first second and ends with the last second of the last day.
+ * Resolved periods starts with the first day's first second and ends with the last second of the last day.
  * */
 internal class PeriodResolved(private val period: Period,
                               private val year: Int,
                               private val zone: ZoneId) {
-    fun period(): Set<Pair<ZonedDateTime, ZonedDateTime>> = with(period) {
+    fun periods(): Set<Pair<ZonedDateTime, ZonedDateTime>> = with(period) {
         val crossYearPeriod = start.monthNo > end.monthNo
         if (crossYearPeriod) {
             setOf(
@@ -103,4 +103,11 @@ internal class PeriodResolved(private val period: Period,
 
         }
     }
+}
+
+internal class ResolvedCalendar(private val metaCalendar: MetaCalendar, private val year: Int, private val zone: ZoneId) {
+    fun dates() = metaCalendar.periods().asSequence()
+            .map { it.resolve(year, zone) }
+            .flatMap { it.asSequence() }
+            .toSet()
 }

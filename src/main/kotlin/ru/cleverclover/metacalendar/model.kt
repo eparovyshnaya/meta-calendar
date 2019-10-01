@@ -62,10 +62,12 @@ data class LastDayOfMonth(override val monthNo: Month,
                           override val note: Any? = null) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
             LastDayOfMonthResolved(this, year, zone, startOfADay)
+
+    override fun toString() = "The last day of ${monthNo.name}"
 }
 
 data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
-    fun resolve(year: Int, zone: ZoneId) = PeriodResolved(this, year, zone).period()
+    fun resolve(year: Int, zone: ZoneId) = PeriodResolved(this, year, zone).periods()
 }
 
 class MetaCalendar {
@@ -74,6 +76,9 @@ class MetaCalendar {
     fun addPeriod(period: Period): Unit = run { periods.add(period) }
     fun removePeriod(period: Period): Unit = run { periods.remove(period) }
     fun periods(): Set<Period> = periods
+    fun size() = periods.size
+
+    fun resolve(year: Int, zone: ZoneId) = ResolvedCalendar(this, year, zone).dates()
 }
 
 

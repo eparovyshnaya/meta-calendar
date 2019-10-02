@@ -66,7 +66,7 @@ class AuxiliaryStructuresTest {
         assertThrows<MetaCalendarParseException> { WeekNoResolved("пятая").weekNoInMonth() }
     }
 
-    @ParameterizedTest(name = "Read last of of month {0}")
+    @ParameterizedTest(name = "Read last day of month {0}")
     @CsvSource(
             "1, 31",
             "2, 29",

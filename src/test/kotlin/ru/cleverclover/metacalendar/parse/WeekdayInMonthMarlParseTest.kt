@@ -2,6 +2,9 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import ru.cleverclover.metacalendar.MetaCalendarParseException
 import ru.cleverclover.metacalendar.ParsedDayMark
 import ru.cleverclover.metacalendar.WeekdayInMonth
@@ -9,28 +12,25 @@ import java.time.DayOfWeek
 import java.time.Month
 
 class WeekdayInMonthMarlParseTest {
-    @Test
-    fun parsed() =
-            assert(ParsedDayMark("третий вторник ноября").mark() ==
-                    WeekdayInMonth(Month.NOVEMBER, 3, DayOfWeek.TUESDAY))
+    @ParameterizedTest(name = "parse {0}")
+    @CsvSource(
+            "первый понедельник июля, 1, 1, 7",
+            "второй четверг августа, 2, 4, 8",
+            "третья субброта сентября, 3, 6, 9",
+            "четвертое воскресеье декабря, 4, 7, 12"
+    )
+    fun parsed(origin: String, weekNo: Int, weekDay: Int, month: Int) =
+            assert(ParsedDayMark(origin).mark() ==
+                    WeekdayInMonth(Month.of(month), weekNo, DayOfWeek.of(weekDay)))
 
-    @Test
-    fun incorrectFormatFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю").mark() }
-    }
-
-    @Test
-    fun outOfBoundDayNoFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("пятый вторник ноября").mark() }
-    }
-
-    @Test
-    fun incorrectDayOfWeekFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй хрю-хрю ноября").mark() }
-    }
-
-    @Test
-    fun incorrectMonthfails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("второй вторник хрюкабря").mark() }
+    @ParameterizedTest(name = "wait failure for {0}")
+    @ValueSource(strings = [
+        "хрю-хрю",
+        "пятый вторник ноября",
+        "второй хрю-хрю ноября",
+        "второй вторник хрюкабря"
+    ])
+    fun incorrectFormatFails(origin: String) {
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(origin).mark() }
     }
 }

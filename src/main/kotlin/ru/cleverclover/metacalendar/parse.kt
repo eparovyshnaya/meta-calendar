@@ -25,21 +25,31 @@ open class MetaCalendarParseException(message: String, cause: Throwable? = null)
  *
  * Sample input is *с конца февраля по третий вторник августа*
  * */
-internal class ParsedPeriod(private val origin: String) {
+internal class PeriodFromRangeDefinition(private val origin: String) {
 
     fun period(): Period {
         // todo: There are 5 reg-exes in the file. Find a way to cash 'em without loading the code.
         val periodDefinition = "\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*".toRegex()
         val matcher = periodDefinition.matchEntire(origin)
                 ?: throw MetaCalendarParseException("no periods definition in $origin")
-        val startMarkSource = matcher.groups[1]
-                ?: throw MetaCalendarParseException("no start in periods definition in $origin")
-        val endMarkSource = matcher.groups[2]
-                ?: throw MetaCalendarParseException("no end in periods definition in $origin")
-        return Period(
-                ParsedDayMark(startMarkSource.value).mark(),
-                ParsedDayMark(endMarkSource.value).mark())
+        return PeriodFromBoundDefinitions(matcher.groups[1]?.value, matcher.groups[2]?.value).period()
     }
+}
+
+internal class PeriodFromBoundDefinitions(private val startDefinition: String?,
+                                          private val endDefinition: String?) {
+    fun period(): Period {
+        if (startDefinition == null) {
+            throw MetaCalendarParseException("no period start definition")
+        }
+        if (endDefinition == null) {
+            throw MetaCalendarParseException("no period start definition")
+        }
+        return Period(
+                ParsedDayMark(startDefinition).mark(),
+                ParsedDayMark(endDefinition).mark())
+    }
+
 }
 
 internal class ParsedDayMark(private val origin: String) {

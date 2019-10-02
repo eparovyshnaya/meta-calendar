@@ -42,7 +42,9 @@ dependencies {
 
 
 test {
-    useJUnitPlatform()
+    useJUnitPlatform(){
+        systemProperty 'junit.jupiter.testinstance.lifecycle.default', 'per_class'
+    }
     jacoco {
         destinationFile = file("${buildDir}/jacoco/test.exec")
     }

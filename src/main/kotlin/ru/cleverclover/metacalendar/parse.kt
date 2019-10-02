@@ -123,7 +123,7 @@ private class WeekdayInMonthFromString(origin: String) : DayMarkFromString(origi
             }
 }
 
-private class MonthResolved(val name: String) {
+internal class MonthResolved(val name: String) {
     fun month(): Month = when (name.take(3)) {
         "янв" -> Month.JANUARY
         "фев" -> Month.FEBRUARY
@@ -141,7 +141,7 @@ private class MonthResolved(val name: String) {
     }
 }
 
-private class WeekdayResolved(val name: String) {
+internal class WeekdayResolved(val name: String) {
     fun datOfWeek(): DayOfWeek = when (name.take(3)) {
         "пон" -> DayOfWeek.MONDAY
         "вто" -> DayOfWeek.TUESDAY
@@ -154,7 +154,7 @@ private class WeekdayResolved(val name: String) {
     }
 }
 
-private class WeekNoResolved(val name: String) {
+internal class WeekNoResolved(val name: String) {
     fun weekNoInMonth(): Int = when (name.take(4)) {
         "перв" -> 1
         "втор" -> 2
@@ -165,7 +165,7 @@ private class WeekNoResolved(val name: String) {
 }
 
 // todo: this one is i10n-independent, move it out of here at any chance
-private class EndOfMonth(val month: Month) {
+internal class EndOfMonth(val month: Month) {
     fun lastDay(): Int = when (month) {
         Month.JANUARY -> 31
         Month.FEBRUARY -> 29

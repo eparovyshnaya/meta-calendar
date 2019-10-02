@@ -28,118 +28,150 @@ open class MetaCalendarParseException(message: String, cause: Throwable? = null)
 internal class ParsedPeriod(private val origin: String) {
 
     fun period(): Period {
+        // todo: There are 5 reg-exes in the file. Find a way to cash 'em without loading the code.
+        val periodDefinition = "\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*".toRegex()
         val matcher = periodDefinition.matchEntire(origin)
-                ?: throw MetaCalendarParseException("no periods definition")
+                ?: throw MetaCalendarParseException("no periods definition in $origin")
+        val startMarkSource = matcher.groups[1]
+                ?: throw MetaCalendarParseException("no start in periods definition in $origin")
+        val endMarkSource = matcher.groups[2]
+                ?: throw MetaCalendarParseException("no end in periods definition in $origin")
         return Period(
-                ParsedDayMark(matcher.groups[1]!!.value).mark(),
-                ParsedDayMark(matcher.groups[2]!!.value).mark())
+                ParsedDayMark(startMarkSource.value).mark(),
+                ParsedDayMark(endMarkSource.value).mark())
     }
 }
 
 internal class ParsedDayMark(private val origin: String) {
 
     fun mark(): DayMark {
-        dayMarkParsers.forEach { parser ->
-            parser(origin)?.let { return it }
+        parsers(origin).forEach { fromString ->
+            fromString.mark()?.let { return it }
         }
         throw MetaCalendarParseException("format of day mark $origin is not supported")
     }
+
+    private fun parsers(origin: String): Sequence<DayMarkFromString> = sequence {
+        yield(DayOfMonthFromString(origin))
+        yield(LastWeekdayInMonthFromString(origin))
+        yield(LastDayInMonthFromString(origin))
+        yield(WeekdayInMonthFromString(origin))
+    }
 }
 
+internal abstract class DayMarkFromString(protected val origin: String) {
+    /**
+     * Should not fail if a dedicated matcher does not fit
+     * (we take such a parsing attempts one by one in a row to check if someone fits).
+     *
+     * Can fail in case of contract violation (validation).
+     * */
+    abstract fun mark(): DayMark?
+}
 
-// todo: get rid of all this ugly STATIC stuff
-
-/*
- * All these parsers should not fail - we try them in a sequence to check if someone fits.
- *
- * Looks pretty much like a _chain of responsibility_ pattern.
- */
-private val dayMarkParsers = listOf(
-        { origin: String ->
+private class DayOfMonthFromString(origin: String) : DayMarkFromString(origin) {
+    private val dayOfMonthMarkDefinition = "\\s*(\\d{1,2})\\s+$groupMonth\\s*".toRegex()
+    override fun mark(): DayMark? =
             dayOfMonthMarkDefinition.matchEntire(origin)?.let {
-                val month = findConstant(it.groupValues[2], monthNameToEnum) as Month
+                val month = MonthResolved(it.groupValues[2]).month()
                 val day = it.groupValues[1].toInt()
-                if (day in 1..monthLastDay[month]!!) {
+                if (day in 1..EndOfMonth(month).lastDay()) {
                     DayOfMonth(monthNo = month, dayNo = day)
                 } else {
-                    null
+                    throw MetaCalendarParseException(
+                            "$origin represents invalid day-of-month mark: day $day should stay in range [1, ${EndOfMonth(month)}]")
                 }
             }
-        },
-        { origin: String ->
+}
+
+private class LastWeekdayInMonthFromString(origin: String) : DayMarkFromString(origin) {
+    private val lastWeekdayInMonthMarkDefinition = "\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()
+    override fun mark(): DayMark? =
             lastWeekdayInMonthMarkDefinition.matchEntire(origin)?.let {
                 LastWeekdayInMonth(
-                        monthNo = findConstant(it.groupValues[2], monthNameToEnum) as Month,
-                        weekday = findConstant(it.groupValues[1], dayOfWeekToEnum) as DayOfWeek)
+                        monthNo = MonthResolved(it.groupValues[2]).month(),
+                        weekday = WeekdayResolved(it.groupValues[1]).datOfWeek())
             }
-        },
-        { origin: String ->
+}
+
+private class LastDayInMonthFromString(origin: String) : DayMarkFromString(origin) {
+    private val lastDayInMonthMarkDefinitionFeb = "\\s*(кон.*\\s+$groupMonth)\\s*".toRegex()
+    override fun mark(): DayMark? =
+            lastDayInMonthMarkDefinitionFeb.matchEntire(origin)?.let {
+                LastDayOfMonth(monthNo = MonthResolved(it.groupValues[2]).month())
+            }
+}
+
+private class WeekdayInMonthFromString(origin: String) : DayMarkFromString(origin) {
+    private val dayOfWeekMarkDefinition = "\\s*(пер.*|втор.*|трет.*|чет.*)\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()
+    override fun mark(): DayMark? =
             dayOfWeekMarkDefinition.matchEntire(origin)?.let {
                 WeekdayInMonth(
-                        monthNo = findConstant(it.groupValues[3], monthNameToEnum) as Month,
-                        weekday = findConstant(it.groupValues[2], dayOfWeekToEnum) as DayOfWeek,
-                        weekNoInMonth = findConstant(it.groupValues[1], weekTextToNumber) as Int)
+                        monthNo = MonthResolved(it.groupValues[3]).month(),
+                        weekday = WeekdayResolved(it.groupValues[2]).datOfWeek(),
+                        weekNoInMonth = WeekNoResolved(it.groupValues[1]).weekNoInMonth())
             }
+}
 
-        },
-        { origin: String ->
-            lastDayInMonthMarkDefinitionFeb.matchEntire(origin)?.let {
-                LastDayOfMonth(monthNo = findConstant(it.groupValues[2], monthNameToEnum) as Month)
-            }
-        }
-)
+private class MonthResolved(val name: String) {
+    fun month(): Month = when (name.take(3)) {
+        "янв" -> Month.JANUARY
+        "фев" -> Month.FEBRUARY
+        "мар" -> Month.MARCH
+        "апр" -> Month.APRIL
+        "мая" -> Month.MAY
+        "июн" -> Month.JUNE
+        "июл" -> Month.JULY
+        "авг" -> Month.AUGUST
+        "сен" -> Month.SEPTEMBER
+        "окт" -> Month.OCTOBER
+        "ноя" -> Month.NOVEMBER
+        "дек" -> Month.DECEMBER
+        else -> throw MetaCalendarParseException("Unknown month $name")
+    }
+}
 
-private fun findConstant(name: String, constants: Map<String, *>) = constants.asSequence().first() { name.startsWith(it.key) }.value
+private class WeekdayResolved(val name: String) {
+    fun datOfWeek(): DayOfWeek = when (name.take(3)) {
+        "пон" -> DayOfWeek.MONDAY
+        "вто" -> DayOfWeek.TUESDAY
+        "сре" -> DayOfWeek.WEDNESDAY
+        "чет" -> DayOfWeek.THURSDAY
+        "пят" -> DayOfWeek.FRIDAY
+        "суб" -> DayOfWeek.SATURDAY
+        "вос" -> DayOfWeek.SUNDAY
+        else -> throw MetaCalendarParseException("Unknown day of week $name")
+    }
+}
 
-private val monthNameToEnum = mapOf(
-        "янв" to Month.JANUARY,
-        "февр" to Month.FEBRUARY,
-        "мар" to Month.MARCH,
-        "апр" to Month.APRIL,
-        "мая" to Month.MAY,
-        "июн" to Month.JUNE,
-        "июл" to Month.JULY,
-        "авг" to Month.AUGUST,
-        "сен" to Month.SEPTEMBER,
-        "окт" to Month.OCTOBER,
-        "нояб" to Month.NOVEMBER,
-        "дек" to Month.DECEMBER)
+private class WeekNoResolved(val name: String) {
+    fun weekNoInMonth(): Int = when (name.take(4)) {
+        "перв" -> 1
+        "втор" -> 2
+        "трет" -> 3
+        "четв" -> 4
+        else -> throw MetaCalendarParseException("Unknown no of week $name")
+    }
+}
 
-private val dayOfWeekToEnum = mapOf(
-        "пон" to DayOfWeek.MONDAY,
-        "вт" to DayOfWeek.TUESDAY,
-        "ср" to DayOfWeek.WEDNESDAY,
-        "чет" to DayOfWeek.THURSDAY,
-        "пят" to DayOfWeek.FRIDAY,
-        "суб" to DayOfWeek.SATURDAY,
-        "вос" to DayOfWeek.SUNDAY)
+// todo: this one is i10n-independent, move it out of here at any chance
+private class EndOfMonth(val month: Month) {
+    fun lastDay(): Int = when (month) {
+        Month.JANUARY -> 31
+        Month.FEBRUARY -> 29
+        Month.MARCH -> 31
+        Month.APRIL -> 30
+        Month.MAY -> 31
+        Month.JUNE -> 30
+        Month.JULY -> 31
+        Month.AUGUST -> 31
+        Month.SEPTEMBER -> 30
+        Month.OCTOBER -> 31
+        Month.NOVEMBER -> 30
+        Month.DECEMBER -> 31
+    }
+}
 
-private val weekTextToNumber = mapOf(
-        "пер" to 1,
-        "втор" to 2,
-        "трет" to 3,
-        "чет" to 4)
-
-private val monthLastDay = mapOf(
-        Month.JANUARY to 31,
-        Month.FEBRUARY to 29,
-        Month.MARCH to 31,
-        Month.APRIL to 30,
-        Month.MAY to 31,
-        Month.JUNE to 30,
-        Month.JULY to 31,
-        Month.AUGUST to 31,
-        Month.SEPTEMBER to 30,
-        Month.OCTOBER to 31,
-        Month.NOVEMBER to 30,
-        Month.DECEMBER to 31)
-
-//todo: get those from maps keysets
+// todo: Used to compose reg-exes. Should be somehow defeated.
 private const val groupMonth = "(янв.*|февр.*|март.*|апр.*|мая|июн.*|июл.*|авг.*|сен.*|окт.*|ноя.*|дек.*)"
 private const val groupWeekday = "(пон.*|вт.*|ср.*|чет.*|пят.*|суб.*|вос.*)"
-
-private val periodDefinition = "\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*".toRegex()
-private val lastDayInMonthMarkDefinitionFeb = "\\s*(кон.*\\s+$groupMonth)\\s*".toRegex()
-private val dayOfMonthMarkDefinition = "\\s*(\\d{1,2})\\s+$groupMonth\\s*".toRegex()
-private val dayOfWeekMarkDefinition = "\\s*(пер.*|втор.*|трет.*|чет.*)\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()
-private val lastWeekdayInMonthMarkDefinition = "\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()

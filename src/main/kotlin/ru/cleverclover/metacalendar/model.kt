@@ -125,7 +125,7 @@ class MetaCalendar {
     /**
      * Bulk resolution for all contained periods resulting in a set of precise dates [Pair]s
      * */
-    fun resolve(year: Int, zone: ZoneId) = ResolvedCalendar(this, year, zone).dates()
+    fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, year, zone).dates()
 }
 
 

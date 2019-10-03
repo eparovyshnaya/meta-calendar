@@ -45,7 +45,6 @@ internal class LastWeekdayInMonthResolved(
         } while (time.dayOfWeek != mark.weekday)
         return time
     }
-
 }
 
 internal class DayOfMonthResolved(private val mark: DayOfMonth,

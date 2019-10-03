@@ -12,10 +12,10 @@ class CalendarResolutionTest() : ResolutionTest() {
     fun crossYearAndPlainPeriods() {
         val (year, zone) = Pair(2019, ZoneId.systemDefault())
         assert(MetaCalendar()
-                .also { calendar ->
-                    calendar.addPeriod(Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 21)))
-                    calendar.addPeriod(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12)))
-                }.resolve(year, zone)
+                .apply {
+                    addPeriod(Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 21)))
+                    addPeriod(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12)))
+                }.resolve(year)
                 ==
                 setOf(
                         Pair(start(2019, Month.JANUARY, 1, zone),

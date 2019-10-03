@@ -48,6 +48,7 @@ MetaCalendar().apply {
  - **resolve** any of'em (or every, in one fell swoop) to *real date periods*,
   having a precise *year* and *time zone* to get pairs of *java.time.ZonedDateTime* objects. 
   The ones you actually can set an alarm clock for.
+  (see [CalendarResolutionTest](src/test/kotlin/ru/cleverclover/metacalendar/resolve/CalendarResolutionTest.kt))
 ```kotlin
 MetaCalendar().apply { Period(DayOfMonth(Month.JANUARY, 1), LastDayOfMonth(Month.FEBRUARY)) }
               .resolve(2019)

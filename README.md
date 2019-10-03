@@ -20,7 +20,7 @@ Instead, they are expressed freely like
  
 ##### what's the use 
 Not much of it, actually. You can
- - **construct** these periods out of natural language phrases like the ones listed above
+ - **construct** these periods out of natural language phrases like the ones listed above, or by formal api
 >by dsl (have a look at [DslTest](src/test/kotlin/ru/cleverclover/metacalendar/compose/DslTest.kt))
  ```kotlin
     calendar {

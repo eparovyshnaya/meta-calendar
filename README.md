@@ -19,7 +19,7 @@ Instead, they are expressed freely like
  - you name it
  
 ##### what's the use 
-Not much of it, actually. It's a simple thing.
+Not much of it, actually. You can
  - **construct** these periods out of natural language phrases like the ones listed above
 >by dsl (have a look at [DslTest](src/test/kotlin/ru/cleverclover/metacalendar/compose/DslTest.kt))
  ```kotlin

@@ -10,6 +10,7 @@ buildscript {
 plugins {
     id "org.jetbrains.kotlin.jvm" version "1.3.21"
     id "jacoco"
+    id "maven"
 }
 
 project.apply {
@@ -24,6 +25,7 @@ repositories {
 compileKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
+
 compileTestKotlin {
     kotlinOptions.jvmTarget = "1.8"
 }
@@ -41,6 +43,27 @@ dependencies {
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.1')
 }
 
+task generateMavenPom {
+    doLast {
+        pom {
+            project {
+                groupId project.group
+                artifactId project.name
+                version project.version
+
+                inceptionYear '2019'
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }.writeTo("pom.xml")
+    }
+}
+
 jar {
     manifest { Manifest mf ->
         mf.attributes(
@@ -48,6 +71,7 @@ jar {
                 'artifact': project.name,
                 'version': project.version)
     }
+
 }
 
 test {

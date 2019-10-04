@@ -7,7 +7,7 @@
 
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE.txt)
 
-[![Release](https://img.shields.io/badge/Release-Latest-lightblue.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
+[![Release](https://img.shields.io/badge/Release-Latest%201.0.0-pink.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
 ##### what is it all about
 It's sort of a data structure with a plain API to handle time *period*s.
 *Period*s are not nailed down to a particular dates, 

@@ -2,3 +2,4 @@
 exclude_paths:
   - 'src/main/test/**/*'
   - '**/test/**'
+  - '**/*.md'

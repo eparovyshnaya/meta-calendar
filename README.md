@@ -5,7 +5,9 @@
  [![codecov](https://codecov.io/gh/eparovyshnaya/meta-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/eparovyshnaya/meta-calendar)
  [![Hits-of-Code](https://hitsofcode.com/github/eparovyshnaya/meta-calendar)](https://hitsofcode.com/view/github/eparovyshnaya/meta-calendar)
 
- [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE.txt)
+[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE.txt)
+
+[ ![Download](https://api.bintray.com/packages/eparovyshnaya/cleverclover/meta-calendar-1.0.0/images/download.svg?version=1.0.0) ](https://bintray.com/eparovyshnaya/cleverclover/meta-calendar-1.0.0/1.0.0/link)
 
 ##### what is it all about
 It's sort of a data structure with a plain API to handle time *period*s.

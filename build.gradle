@@ -60,7 +60,7 @@ task generateMavenPom {
                     }
                 }
             }
-        }.writeTo("pom.xml")
+        }.writeTo("${project.name}-${project.version}.pom")
     }
 }
 

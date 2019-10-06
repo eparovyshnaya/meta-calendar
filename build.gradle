@@ -43,35 +43,15 @@ dependencies {
     testRuntimeOnly('org.junit.jupiter:junit-jupiter-engine:5.5.1')
 }
 
-task generateMavenPom {
-    doLast {
-        pom {
-            project {
-                groupId project.group
-                artifactId project.name
-                version project.version
-
-                inceptionYear '2019'
-                licenses {
-                    license {
-                        name 'The MIT License'
-                        url 'https://opensource.org/licenses/mit-license.php'
-                        distribution 'repo'
-                    }
-                }
-            }
-        }.writeTo("${project.name}-${project.version}.pom")
-    }
+jar {
+    manifest { extendManifest(it) }
 }
 
-jar {
-    manifest { Manifest mf ->
-        mf.attributes(
-                'group': project.group,
-                'artifact': project.name,
-                'version': project.version)
-    }
-
+void extendManifest(Manifest mf) {
+    mf.attributes(
+            'group': project.group,
+            'artifact': project.name,
+            'version': project.version)
 }
 
 test {
@@ -91,4 +71,35 @@ jacocoTestReport {
         csv.enabled false
         html.destination file("${buildDir}/reports/jacoco/html")
     }
+}
+
+task sourceJar(type: Jar) {
+    classifier = "sources"
+    from sourceSets.main.allSource
+    manifest { extendManifest(it) }
+}
+
+task mavenPom {
+    doLast {
+        pom {
+            project {
+                groupId project.group
+                artifactId project.name
+                version project.version
+
+                inceptionYear '2019'
+                licenses {
+                    license {
+                        name 'The MIT License'
+                        url 'https://opensource.org/licenses/mit-license.php'
+                        distribution 'repo'
+                    }
+                }
+            }
+        }.writeTo("${buildDir.name}/$libsDirName/${project.name}-${project.version}.pom")
+    }
+}
+
+task bintrayRelease {
+    dependsOn clean, test, jar, mavenPom, sourceJar
 }

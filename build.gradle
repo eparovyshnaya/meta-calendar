@@ -75,7 +75,8 @@ jacocoTestReport {
 
 task sourceJar(type: Jar) {
     classifier = "sources"
-    from sourceSets.main.allSource
+    from(sourceSets.main.allSource, sourceSets.test.allSource)
+
     manifest { extendManifest(it) }
 }
 

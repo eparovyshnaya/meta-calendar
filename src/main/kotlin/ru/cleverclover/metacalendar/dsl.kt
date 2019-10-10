@@ -59,8 +59,12 @@ class ConstructionContext {
      * From-natural-language parsing is used to recognize
      * */
     fun period(from: String, till: String, note: Any? = null) =
-            calendar.addPeriod(Period(
-                    ParsedDayMark(from).mark(),
-                    ParsedDayMark(till).mark(),
-                    note))
+            PeriodFromBoundDefinitions(from, till).bounds().let {
+                calendar.addPeriod(it.period(note))
+            }
+
+    fun period(range: String, note: Any? = null) =
+            PeriodFromRangeDefinition(range).bounds().let {
+                calendar.addPeriod(it.period(note))
+            }
 }

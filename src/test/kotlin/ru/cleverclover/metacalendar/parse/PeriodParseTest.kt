@@ -2,10 +2,7 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.DayOfMonth
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.PeriodFromBoundDefinitions
-import ru.cleverclover.metacalendar.PeriodFromRangeDefinition
+import ru.cleverclover.metacalendar.*
 import java.time.Month
 
 class PeriodParseTest {
@@ -13,7 +10,7 @@ class PeriodParseTest {
     @Test
     fun parsed() {
         val origin = "с 1 января по 8 февраля"
-        val period = PeriodFromRangeDefinition(origin).period()
+        val period = PeriodFromRangeDefinition(origin).bounds().period()
         assert(period.start == DayOfMonth(Month.JANUARY, 1)) {
             "Period originated in [$origin] must not start with ${period.start}"
         }
@@ -26,28 +23,28 @@ class PeriodParseTest {
     fun incorrectRangeDefinitionFails() {
         val origin = "от 1 января до 8 января"
         assertThrows<MetaCalendarParseException> {
-            PeriodFromRangeDefinition(origin).period()
+            PeriodFromRangeDefinition(origin).bounds().period()
         }
     }
 
     @Test
     fun incorrectDayMarkFails() {
         assertThrows<MetaCalendarParseException> {
-            PeriodFromRangeDefinition("с 32 марта по 8 июль").period()
+            PeriodFromRangeDefinition("с 32 марта по 8 июль").bounds().period()
         }
     }
 
     @Test
     fun incorrectStartDefinitionFails() {
         assertThrows<MetaCalendarParseException> {
-            PeriodFromBoundDefinitions(null, "8 июля").period()
+            PeriodFromBoundDefinitions(null, "8 июля").bounds().period()
         }
     }
 
     @Test
     fun incorrectEndDefinitionFails() {
         assertThrows<MetaCalendarParseException> {
-            PeriodFromBoundDefinitions("21 сентября", null).period()
+            PeriodFromBoundDefinitions("21 сентября", null).bounds().period()
         }
     }
 }

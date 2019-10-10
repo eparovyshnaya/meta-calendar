@@ -20,7 +20,11 @@ class DslTest {
             Period(
                     LastDayOfMonth(Month.OCTOBER),
                     LastDayOfMonth(Month.OCTOBER),
-                    "Halloween!"))
+                    "Halloween!"),
+            Period(
+                    LastDayOfMonth(Month.AUGUST),
+                    WeekdayInMonth(Month.SEPTEMBER, 3, DayOfWeek.FRIDAY),
+                    "школа"))
     )
 
     private fun create() =
@@ -39,6 +43,8 @@ class DslTest {
                         till = "конец октября",
                         note = "Halloween!"
                 )
+                period(range = "с конца августа по третью пятницу сентября",
+                        note = "школа")
             }
 
     private fun assertPeriodsAreOk(calendar: MetaCalendar, expectedPeriods: Set<Period>) = with(calendar.periods()) {

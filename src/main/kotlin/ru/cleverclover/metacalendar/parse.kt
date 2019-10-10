@@ -27,30 +27,31 @@ open class MetaCalendarParseException(message: String, cause: Throwable? = null)
  * */
 internal class PeriodFromRangeDefinition(private val origin: String) {
 
-    fun period(): Period {
+    fun bounds(): Pair<DayMark, DayMark> {
         // todo: There are 5 reg-exes in the file. Find a way to cash 'em without loading the code.
         val periodDefinition = "\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*".toRegex()
         val matcher = periodDefinition.matchEntire(origin)
                 ?: throw MetaCalendarParseException("no periods definition in $origin")
-        return PeriodFromBoundDefinitions(matcher.groups[1]?.value, matcher.groups[2]?.value).period()
+        return PeriodFromBoundDefinitions(matcher.groups[1]?.value, matcher.groups[2]?.value).bounds()
     }
 }
 
 internal class PeriodFromBoundDefinitions(private val startDefinition: String?,
                                           private val endDefinition: String?) {
-    fun period(): Period {
+    fun bounds(): Pair<DayMark, DayMark> {
         if (startDefinition == null) {
             throw MetaCalendarParseException("no period start definition")
         }
         if (endDefinition == null) {
             throw MetaCalendarParseException("no period start definition")
         }
-        return Period(
+        return Pair(
                 ParsedDayMark(startDefinition).mark(),
                 ParsedDayMark(endDefinition).mark())
     }
-
 }
+
+fun Pair<DayMark, DayMark>.period(note: Any? = null) = Period(first, second, note)
 
 internal class ParsedDayMark(private val origin: String) {
 

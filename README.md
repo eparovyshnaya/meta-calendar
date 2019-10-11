@@ -8,7 +8,8 @@
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE.txt)
 
 [![Release](https://img.shields.io/badge/Release-Latest%201.0.1-pink.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
-##### what is it all about
+
+#### what is it all about
 It's sort of a data structure with a plain API to handle time *period*s.
 *Period*s are not nailed down to a particular dates, 
 so you cannot settle an alarm clock to avoid missing start of such a *period*.
@@ -19,7 +20,7 @@ Instead, they are expressed freely like
  - time to let your hair down: the last day of December
  - you name it
  
-##### what's the use 
+#### what's the use 
 Not much of it, actually. You can
  - **construct** these periods out of natural language phrases like the ones listed above, or by formal api
 >by dsl (have a look at [DslTest](src/test/kotlin/ru/cleverclover/metacalendar/compose/DslTest.kt))
@@ -35,15 +36,17 @@ Not much of it, actually. You can
 >by nl api (see [PeriodParseTest](src/test/kotlin/ru/cleverclover/metacalendar/parse/PeriodParseTest.kt))
  ```kotlin
     MetaCalendar().apply {
-            addPeriod(PeriodFromRangeDefinition("с 1 января по 8 февраля").period())
-            addPeriod(PeriodFromBoundDefinitions("1 января", "8 июля").period())
+            addPeriod(PeriodFromRangeDefinition("с 1 января по 8 февраля")
+                .bounds().period())
+            addPeriod(PeriodFromBoundDefinitions("1 января", "8 июля")
+                .bounds().period())
     }
 ```
 >by regular api
 ```kotlin
 MetaCalendar().apply {
-    Period(DayOfMonth(Month.JANUARY, 1), 
-           LastDayOfMonth(Month.FEBRUARY))
+    addPeriod(Period(DayOfMonth(Month.JANUARY, 1), 
+                     LastDayOfMonth(Month.FEBRUARY)))
 }
 ```
  - **resolve** any of'em (or every, in one fell swoop) to *real date periods*,
@@ -51,10 +54,12 @@ MetaCalendar().apply {
   The ones you actually can set an alarm clock for.
   (see [CalendarResolutionTest](src/test/kotlin/ru/cleverclover/metacalendar/resolve/CalendarResolutionTest.kt))
 ```kotlin
-MetaCalendar().apply { Period(DayOfMonth(Month.JANUARY, 1), LastDayOfMonth(Month.FEBRUARY)) }
-              .resolve(2019)
+MetaCalendar().apply { 
+        addPeriod(Period(DayOfMonth(Month.JANUARY, 1), 
+                         LastDayOfMonth(Month.FEBRUARY))) 
+    }.resolve(2019)
 ```
 
-##### yet to be done
+#### yet to be done
  - i18n is going to happen, currently ru-l10n is implanted [#6](https://github.com/eparovyshnaya/meta-calendar/issues/6)
  - dsl extension ability [#5](https://github.com/eparovyshnaya/meta-calendar/issues/5)

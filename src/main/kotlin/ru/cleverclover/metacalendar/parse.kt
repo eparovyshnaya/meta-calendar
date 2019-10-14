@@ -25,7 +25,7 @@ open class MetaCalendarParseException(message: String, cause: Throwable? = null)
  *
  * Sample input is *с конца февраля по третий вторник августа*
  * */
-internal class PeriodFromRangeDefinition(private val origin: String) {
+class PeriodFromRangeDefinition(private val origin: String) {
 
     fun bounds(): Pair<DayMark, DayMark> {
         // todo: There are 5 reg-exes in the file. Find a way to cash 'em without loading the code.
@@ -36,8 +36,8 @@ internal class PeriodFromRangeDefinition(private val origin: String) {
     }
 }
 
-internal class PeriodFromBoundDefinitions(private val startDefinition: String?,
-                                          private val endDefinition: String?) {
+class PeriodFromBoundDefinitions(private val startDefinition: String?,
+                                 private val endDefinition: String?) {
     fun bounds(): Pair<DayMark, DayMark> {
         if (startDefinition == null) {
             throw MetaCalendarParseException("no period start definition")

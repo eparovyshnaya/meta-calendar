@@ -20,17 +20,31 @@ import java.time.Month
  * */
 open class MetaCalendarParseException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
+private object Definitions {
+    private const val groupMonth = "(янв.*|февр.*|март.*|апр.*|мая|июн.*|июл.*|авг.*|сен.*|окт.*|ноя.*|дек.*)"
+    private const val groupWeekday = "(пон.*|вт.*|ср.*|чет.*|пят.*|суб.*|вос.*)"
+
+    private val periodDefinition = Cashed("\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*") { it.toRegex() }
+    private val dayOfMonthMarkDefinition = Cashed("\\s*(\\d{1,2})\\s+$groupMonth\\s*") { it.toRegex() }
+    private val lastWeekdayInMonthMarkDefinition = Cashed("\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*") { it.toRegex() }
+    private val lastDayInMonthMarkDefinitionFeb = Cashed("\\s*(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
+    private val dayOfWeekMarkDefinition = Cashed("\\s*(пер.*|втор.*|трет.*|чет.*)\\s+$groupWeekday\\s+$groupMonth\\s*") { it.toRegex() }
+
+    fun period() = periodDefinition.get()
+    fun dayOfMonth() = dayOfMonthMarkDefinition.get()
+    fun lastWeekdayInMonth() = lastWeekdayInMonthMarkDefinition.get()
+    fun lastDayInFeb() = lastDayInMonthMarkDefinitionFeb.get()
+    fun dayOfWeek() = dayOfWeekMarkDefinition.get()
+}
+
 /**
  * The parsing for a natural language string to a [MetaCalendar]'s [Period]
  *
  * Sample input is *с конца февраля по третий вторник августа*
  * */
 class PeriodFromRangeDefinition(private val origin: String) {
-
     fun bounds(): Pair<DayMark, DayMark> {
-        // todo: There are 5 reg-exes in the file. Find a way to cash 'em without loading the code.
-        val periodDefinition = "\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*".toRegex()
-        val matcher = periodDefinition.matchEntire(origin)
+        val matcher = Definitions.period().matchEntire(origin)
                 ?: throw MetaCalendarParseException("no periods definition in $origin")
         return PeriodFromBoundDefinitions(matcher.groups[1]?.value, matcher.groups[2]?.value).bounds()
     }
@@ -80,10 +94,11 @@ internal abstract class DayMarkFromString(protected val origin: String) {
     abstract fun mark(): DayMark?
 }
 
+
 private class DayOfMonthFromString(origin: String) : DayMarkFromString(origin) {
-    private val dayOfMonthMarkDefinition = "\\s*(\\d{1,2})\\s+$groupMonth\\s*".toRegex()
+
     override fun mark(): DayMark? =
-            dayOfMonthMarkDefinition.matchEntire(origin)?.let {
+            Definitions.dayOfMonth().matchEntire(origin)?.let {
                 val month = MonthResolved(it.groupValues[2]).month()
                 val day = it.groupValues[1].toInt()
                 if (day in 1..EndOfMonth(month).lastDay()) {
@@ -96,9 +111,8 @@ private class DayOfMonthFromString(origin: String) : DayMarkFromString(origin) {
 }
 
 private class LastWeekdayInMonthFromString(origin: String) : DayMarkFromString(origin) {
-    private val lastWeekdayInMonthMarkDefinition = "\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()
     override fun mark(): DayMark? =
-            lastWeekdayInMonthMarkDefinition.matchEntire(origin)?.let {
+            Definitions.lastWeekdayInMonth().matchEntire(origin)?.let {
                 LastWeekdayInMonth(
                         monthNo = MonthResolved(it.groupValues[2]).month(),
                         weekday = WeekdayResolved(it.groupValues[1]).datOfWeek())
@@ -106,17 +120,15 @@ private class LastWeekdayInMonthFromString(origin: String) : DayMarkFromString(o
 }
 
 private class LastDayInMonthFromString(origin: String) : DayMarkFromString(origin) {
-    private val lastDayInMonthMarkDefinitionFeb = "\\s*(кон.*\\s+$groupMonth)\\s*".toRegex()
     override fun mark(): DayMark? =
-            lastDayInMonthMarkDefinitionFeb.matchEntire(origin)?.let {
+            Definitions.lastDayInFeb().matchEntire(origin)?.let {
                 LastDayOfMonth(monthNo = MonthResolved(it.groupValues[2]).month())
             }
 }
 
 private class WeekdayInMonthFromString(origin: String) : DayMarkFromString(origin) {
-    private val dayOfWeekMarkDefinition = "\\s*(пер.*|втор.*|трет.*|чет.*)\\s+$groupWeekday\\s+$groupMonth\\s*".toRegex()
     override fun mark(): DayMark? =
-            dayOfWeekMarkDefinition.matchEntire(origin)?.let {
+            Definitions.dayOfWeek().matchEntire(origin)?.let {
                 WeekdayInMonth(
                         monthNo = MonthResolved(it.groupValues[3]).month(),
                         weekday = WeekdayResolved(it.groupValues[2]).datOfWeek(),
@@ -124,7 +136,7 @@ private class WeekdayInMonthFromString(origin: String) : DayMarkFromString(origi
             }
 }
 
-internal class MonthResolved(val name: String) {
+internal class MonthResolved(private val name: String) {
     fun month(): Month = when (name.take(3)) {
         "янв" -> Month.JANUARY
         "фев" -> Month.FEBRUARY
@@ -142,7 +154,7 @@ internal class MonthResolved(val name: String) {
     }
 }
 
-internal class WeekdayResolved(val name: String) {
+internal class WeekdayResolved(private val name: String) {
     fun datOfWeek(): DayOfWeek = when (name.take(3)) {
         "пон" -> DayOfWeek.MONDAY
         "вто" -> DayOfWeek.TUESDAY
@@ -155,7 +167,7 @@ internal class WeekdayResolved(val name: String) {
     }
 }
 
-internal class WeekNoResolved(val name: String) {
+internal class WeekNoResolved(private val name: String) {
     fun weekNoInMonth(): Int = when (name.take(4)) {
         "перв" -> 1
         "втор" -> 2
@@ -182,7 +194,3 @@ internal class EndOfMonth(val month: Month) {
         Month.DECEMBER -> 31
     }
 }
-
-// todo: Used to compose reg-exes. Should be somehow defeated.
-private const val groupMonth = "(янв.*|февр.*|март.*|апр.*|мая|июн.*|июл.*|авг.*|сен.*|окт.*|ноя.*|дек.*)"
-private const val groupWeekday = "(пон.*|вт.*|ср.*|чет.*|пят.*|суб.*|вос.*)"

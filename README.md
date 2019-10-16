@@ -60,6 +60,29 @@ MetaCalendar().apply {
     }.resolve(2019)
 ```
 
+#### how to plug
+
+ - the library distributive resides under [jcenter](https://mvnrepository.com/repos/jcenter) maven repository.
+ To add a repository to your, say, gradle build, use the dedicated gradle dsl function
+```groovy
+repositories {
+    jcenter()
+}    
+```
+or configure it directly 
+```kotlin
+repositories {
+    maven(url = "https://jcenter.bintray.com")
+}
+```
+
+ - latest released artifact verion can be found, let alone this place, at [bintray](https://bintray.com/eparovyshnaya/clever-clover/meta-calendar) presence page.
+ Include the library in your, say, gradle build as follows (groovy dsl sample)
+ ```groovy 
+compile 'ru.clever-clover.meta-calendar:meta-calendar:1.0.1'
+``` 
+
 #### yet to be done
  - i18n is going to happen, currently ru-l10n is implanted [#6](https://github.com/eparovyshnaya/meta-calendar/issues/6)
  - dsl extension ability [#5](https://github.com/eparovyshnaya/meta-calendar/issues/5)
+

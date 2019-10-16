@@ -5,7 +5,7 @@
  [![codecov](https://codecov.io/gh/eparovyshnaya/meta-calendar/branch/master/graph/badge.svg)](https://codecov.io/gh/eparovyshnaya/meta-calendar)
  [![Hits-of-Code](https://hitsofcode.com/github/eparovyshnaya/meta-calendar)](https://hitsofcode.com/view/github/eparovyshnaya/meta-calendar)
 
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE)
 
 [![Release](https://img.shields.io/badge/Release-Latest%201.0.1-pink.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
 

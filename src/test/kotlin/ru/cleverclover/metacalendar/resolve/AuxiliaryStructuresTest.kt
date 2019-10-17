@@ -25,12 +25,12 @@ class AuxiliaryStructuresTest {
             "ноября, 11",
             "декабря, 12")
     fun monthFound(origin: String, month: Int) {
-        assert(MonthResolved(origin).month() == Month.of(month))
+        assert(MonthResolved.month(origin) == Month.of(month))
     }
 
     @Test
     fun monthNotFound() {
-        assertThrows<MetaCalendarParseException> { MonthResolved("хрюкабря").month() }
+        assertThrows<MetaCalendarParseException> { MonthResolved.month("хрюкабря") }
     }
 
     @ParameterizedTest(name = "Parse week day from {0}")
@@ -43,12 +43,12 @@ class AuxiliaryStructuresTest {
             "суббота, 6",
             "воскресенье, 7")
     fun weekDayFound(origin: String, weekDay: Int) {
-        assert(WeekdayResolved(origin).datOfWeek() == DayOfWeek.of(weekDay))
+        assert(WeekdayResolved.datOfWeek(origin) == DayOfWeek.of(weekDay))
     }
 
     @Test
     fun weekDayNotFound() {
-        assertThrows<MetaCalendarParseException> { WeekdayResolved("хрюкота").datOfWeek() }
+        assertThrows<MetaCalendarParseException> { WeekdayResolved.datOfWeek("хрюкота") }
     }
 
     @ParameterizedTest(name = "Parse week day from {0}")
@@ -58,12 +58,12 @@ class AuxiliaryStructuresTest {
             "третий, 3",
             "четвертый, 4")
     fun weekNoNotFound(origin: String, weekNo: Int) {
-        assert(WeekNoResolved(origin).weekNoInMonth() == weekNo)
+        assert(WeekNoResolved.weekNoInMonth(origin) == weekNo)
     }
 
     @Test
     fun weekNoNotFound() {
-        assertThrows<MetaCalendarParseException> { WeekNoResolved("пятая").weekNoInMonth() }
+        assertThrows<MetaCalendarParseException> { WeekNoResolved.weekNoInMonth("пятая") }
     }
 
     @ParameterizedTest(name = "Read last day of month {0}")
@@ -81,6 +81,6 @@ class AuxiliaryStructuresTest {
             "11, 30",
             "12, 31")
     fun endOfMonthValid(month: Int, lastDay: Int) {
-        assert(EndOfMonth(Month.of(month)).lastDay() == lastDay)
+        assert(EndOfMonth.lastDay(Month.of(month)) == lastDay)
     }
 }

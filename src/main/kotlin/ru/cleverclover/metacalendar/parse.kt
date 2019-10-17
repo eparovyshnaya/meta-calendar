@@ -99,13 +99,13 @@ private class DayOfMonthFromString(origin: String) : DayMarkFromString(origin) {
 
     override fun mark(): DayMark? =
             Definitions.dayOfMonth().matchEntire(origin)?.let {
-                val month = MonthResolved(it.groupValues[2]).month()
+                val month = MonthResolved.month(it.groupValues[2])
                 val day = it.groupValues[1].toInt()
-                if (day in 1..EndOfMonth(month).lastDay()) {
+                if (day in 1..EndOfMonth.lastDay(month)) {
                     DayOfMonth(monthNo = month, dayNo = day)
                 } else {
                     throw MetaCalendarParseException(
-                            "$origin represents invalid day-of-month mark: day $day should stay in range [1, ${EndOfMonth(month)}]")
+                            "$origin represents invalid day-of-month mark: day $day should stay in range [1, ${EndOfMonth.lastDay(month)}]")
                 }
             }
 }
@@ -114,15 +114,15 @@ private class LastWeekdayInMonthFromString(origin: String) : DayMarkFromString(o
     override fun mark(): DayMark? =
             Definitions.lastWeekdayInMonth().matchEntire(origin)?.let {
                 LastWeekdayInMonth(
-                        monthNo = MonthResolved(it.groupValues[2]).month(),
-                        weekday = WeekdayResolved(it.groupValues[1]).datOfWeek())
+                        monthNo = MonthResolved.month(it.groupValues[2]),
+                        weekday = WeekdayResolved.datOfWeek(it.groupValues[1]))
             }
 }
 
 private class LastDayInMonthFromString(origin: String) : DayMarkFromString(origin) {
     override fun mark(): DayMark? =
             Definitions.lastDayInFeb().matchEntire(origin)?.let {
-                LastDayOfMonth(monthNo = MonthResolved(it.groupValues[2]).month())
+                LastDayOfMonth(monthNo = MonthResolved.month(it.groupValues[2]))
             }
 }
 
@@ -130,67 +130,71 @@ private class WeekdayInMonthFromString(origin: String) : DayMarkFromString(origi
     override fun mark(): DayMark? =
             Definitions.dayOfWeek().matchEntire(origin)?.let {
                 WeekdayInMonth(
-                        monthNo = MonthResolved(it.groupValues[3]).month(),
-                        weekday = WeekdayResolved(it.groupValues[2]).datOfWeek(),
-                        weekNoInMonth = WeekNoResolved(it.groupValues[1]).weekNoInMonth())
+                        monthNo = MonthResolved.month(it.groupValues[3]),
+                        weekday = WeekdayResolved.datOfWeek(it.groupValues[2]),
+                        weekNoInMonth = WeekNoResolved.weekNoInMonth(it.groupValues[1]))
             }
 }
 
-internal class MonthResolved(private val name: String) {
-    fun month(): Month = when (name.take(3)) {
-        "янв" -> Month.JANUARY
-        "фев" -> Month.FEBRUARY
-        "мар" -> Month.MARCH
-        "апр" -> Month.APRIL
-        "мая" -> Month.MAY
-        "июн" -> Month.JUNE
-        "июл" -> Month.JULY
-        "авг" -> Month.AUGUST
-        "сен" -> Month.SEPTEMBER
-        "окт" -> Month.OCTOBER
-        "ноя" -> Month.NOVEMBER
-        "дек" -> Month.DECEMBER
-        else -> throw MetaCalendarParseException("Unknown month $name")
-    }
+internal object MonthResolved {
+    private val resolution = mapOf(
+            "янв" to Month.JANUARY,
+            "фев" to Month.FEBRUARY,
+            "мар" to Month.MARCH,
+            "апр" to Month.APRIL,
+            "мая" to Month.MAY,
+            "июн" to Month.JUNE,
+            "июл" to Month.JULY,
+            "авг" to Month.AUGUST,
+            "сен" to Month.SEPTEMBER,
+            "окт" to Month.OCTOBER,
+            "ноя" to Month.NOVEMBER,
+            "дек" to Month.DECEMBER)
+
+    fun month(name: String) = resolution[name.take(3)] ?: throw MetaCalendarParseException("Unknown month $name")
 }
 
-internal class WeekdayResolved(private val name: String) {
-    fun datOfWeek(): DayOfWeek = when (name.take(3)) {
-        "пон" -> DayOfWeek.MONDAY
-        "вто" -> DayOfWeek.TUESDAY
-        "сре" -> DayOfWeek.WEDNESDAY
-        "чет" -> DayOfWeek.THURSDAY
-        "пят" -> DayOfWeek.FRIDAY
-        "суб" -> DayOfWeek.SATURDAY
-        "вос" -> DayOfWeek.SUNDAY
-        else -> throw MetaCalendarParseException("Unknown day of week $name")
-    }
+internal object WeekdayResolved {
+    private val resolution = mapOf(
+            "пон" to DayOfWeek.MONDAY,
+            "вто" to DayOfWeek.TUESDAY,
+            "сре" to DayOfWeek.WEDNESDAY,
+            "чет" to DayOfWeek.THURSDAY,
+            "пят" to DayOfWeek.FRIDAY,
+            "суб" to DayOfWeek.SATURDAY,
+            "вос" to DayOfWeek.SUNDAY)
+
+    fun datOfWeek(name: String) = resolution[name.take(3)]
+            ?: throw MetaCalendarParseException("Unknown day of week $name")
 }
 
-internal class WeekNoResolved(private val name: String) {
-    fun weekNoInMonth(): Int = when (name.take(4)) {
-        "перв" -> 1
-        "втор" -> 2
-        "трет" -> 3
-        "четв" -> 4
-        else -> throw MetaCalendarParseException("Unknown no of week $name")
-    }
+internal object WeekNoResolved {
+    private val resolution = mapOf(
+            "перв" to 1,
+            "втор" to 2,
+            "трет" to 3,
+            "четв" to 4)
+
+
+    fun weekNoInMonth(name: String) = resolution[name.take(4)]
+            ?: throw MetaCalendarParseException("Unknown no of week $name")
 }
 
 // todo: this one is i10n-independent, move it out of here at any chance
-internal class EndOfMonth(val month: Month) {
-    fun lastDay(): Int = when (month) {
-        Month.JANUARY -> 31
-        Month.FEBRUARY -> 29
-        Month.MARCH -> 31
-        Month.APRIL -> 30
-        Month.MAY -> 31
-        Month.JUNE -> 30
-        Month.JULY -> 31
-        Month.AUGUST -> 31
-        Month.SEPTEMBER -> 30
-        Month.OCTOBER -> 31
-        Month.NOVEMBER -> 30
-        Month.DECEMBER -> 31
-    }
+internal object EndOfMonth {
+    private val lastDay = mapOf(
+            Month.JANUARY to 31,
+            Month.FEBRUARY to 29,
+            Month.MARCH to 31,
+            Month.APRIL to 30,
+            Month.MAY to 31,
+            Month.JUNE to 30,
+            Month.JULY to 31,
+            Month.AUGUST to 31,
+            Month.SEPTEMBER to 30,
+            Month.OCTOBER to 31,
+            Month.NOVEMBER to 30,
+            Month.DECEMBER to 31)
+
+    fun lastDay(month: Month) = lastDay[month]!!
 }

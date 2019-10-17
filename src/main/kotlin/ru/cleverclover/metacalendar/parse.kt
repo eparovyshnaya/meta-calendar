@@ -101,11 +101,11 @@ private class DayOfMonthFromString(origin: String) : DayMarkFromString(origin) {
             Definitions.dayOfMonth().matchEntire(origin)?.let {
                 val month = MonthResolved.month(it.groupValues[2])
                 val day = it.groupValues[1].toInt()
-                if (day in 1..EndOfMonth.lastDay(month)) {
+                if (day in 1..month.length(false)) {
                     DayOfMonth(monthNo = month, dayNo = day)
                 } else {
                     throw MetaCalendarParseException(
-                            "$origin represents invalid day-of-month mark: day $day should stay in range [1, ${EndOfMonth.lastDay(month)}]")
+                            "$origin represents invalid day-of-month mark: day $day should stay in range [1, ${month.length(false)}]")
                 }
             }
 }
@@ -178,23 +178,4 @@ internal object WeekNoResolved {
 
     fun weekNoInMonth(name: String) = resolution[name.take(4)]
             ?: throw MetaCalendarParseException("Unknown no of week $name")
-}
-
-// todo: this one is i10n-independent, move it out of here at any chance
-internal object EndOfMonth {
-    private val lastDay = mapOf(
-            Month.JANUARY to 31,
-            Month.FEBRUARY to 29,
-            Month.MARCH to 31,
-            Month.APRIL to 30,
-            Month.MAY to 31,
-            Month.JUNE to 30,
-            Month.JULY to 31,
-            Month.AUGUST to 31,
-            Month.SEPTEMBER to 30,
-            Month.OCTOBER to 31,
-            Month.NOVEMBER to 30,
-            Month.DECEMBER to 31)
-
-    fun lastDay(month: Month) = lastDay[month]!!
 }

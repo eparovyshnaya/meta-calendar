@@ -65,22 +65,4 @@ class AuxiliaryStructuresTest {
     fun weekNoNotFound() {
         assertThrows<MetaCalendarParseException> { WeekNoResolved.weekNoInMonth("пятая") }
     }
-
-    @ParameterizedTest(name = "Read last day of month {0}")
-    @CsvSource(
-            "1, 31",
-            "2, 29",
-            "3, 31",
-            "4, 30",
-            "5, 31",
-            "6, 30",
-            "7, 31",
-            "8, 31",
-            "9, 30",
-            "10, 31",
-            "11, 30",
-            "12, 31")
-    fun endOfMonthValid(month: Int, lastDay: Int) {
-        assert(EndOfMonth.lastDay(Month.of(month)) == lastDay)
-    }
 }

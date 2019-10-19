@@ -27,13 +27,15 @@ private object Definitions {
     private val periodDefinition = Cashed("\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*") { it.toRegex() }
     private val dayOfMonthMarkDefinition = Cashed("\\s*(\\d{1,2})\\s+$groupMonth\\s*") { it.toRegex() }
     private val lastWeekdayInMonthMarkDefinition = Cashed("\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*") { it.toRegex() }
-    private val lastDayInMonthMarkDefinitionFeb = Cashed("\\s*(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
+    private val lastDayInMonthMarkDefinition = Cashed("\\s*(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
+    private val lastDayInFebMarkDefinition = Cashed("\\s*(28\\s*\\(\\s*29\\s*\\)\\s+(февр.*))|(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
     private val dayOfWeekMarkDefinition = Cashed("\\s*(пер.*|втор.*|трет.*|чет.*)\\s+$groupWeekday\\s+$groupMonth\\s*") { it.toRegex() }
 
     fun period() = periodDefinition.get()
     fun dayOfMonth() = dayOfMonthMarkDefinition.get()
     fun lastWeekdayInMonth() = lastWeekdayInMonthMarkDefinition.get()
-    fun lastDayInFeb() = lastDayInMonthMarkDefinitionFeb.get()
+    fun lastDayInMonth() = lastDayInMonthMarkDefinition.get()
+    fun lastDayInFeb() = lastDayInFebMarkDefinition.get()
     fun dayOfWeek() = dayOfWeekMarkDefinition.get()
 }
 
@@ -81,6 +83,7 @@ internal class ParsedDayMark(private val origin: String) {
         yield(LastWeekdayInMonthFromString(origin))
         yield(LastDayInMonthFromString(origin))
         yield(WeekdayInMonthFromString(origin))
+        yield(LastDayInFebFromString(origin))
     }
 }
 
@@ -121,8 +124,15 @@ private class LastWeekdayInMonthFromString(origin: String) : DayMarkFromString(o
 
 private class LastDayInMonthFromString(origin: String) : DayMarkFromString(origin) {
     override fun mark(): DayMark? =
-            Definitions.lastDayInFeb().matchEntire(origin)?.let {
+            Definitions.lastDayInMonth().matchEntire(origin)?.let {
                 LastDayOfMonth(monthNo = MonthResolved.month(it.groupValues[2]))
+            }
+}
+
+private class LastDayInFebFromString(origin: String) : DayMarkFromString(origin) {
+    override fun mark(): DayMark? =
+            Definitions.lastDayInFeb().matchEntire(origin)?.let {
+                LastDayOfMonth(monthNo = Month.FEBRUARY)
             }
 }
 

@@ -8,8 +8,12 @@ import java.time.Month
 class EndOfMonthMarkParseTest {
 
     @Test
-    fun parsed() =
+    fun regular() =
             assert(ParsedDayMark("конец июня").mark() == LastDayOfMonth(Month.JUNE))
+
+    @Test
+    fun february() =
+            assert(ParsedDayMark("28 (29) февраля").mark() == LastDayOfMonth(Month.FEBRUARY))
 
     @Test
     fun incorrectFormatFails() {

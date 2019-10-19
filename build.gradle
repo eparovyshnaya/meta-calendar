@@ -101,6 +101,6 @@ task mavenPom {
     }
 }
 
-task bintrayRelease {
+task release {
     dependsOn clean, test, jar, mavenPom, sourceJar
 }

@@ -15,7 +15,9 @@ class CalendarResolutionTest() : ResolutionTest() {
                 .apply {
                     addPeriod(Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 21)))
                     addPeriod(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12), note))
-                }.resolve(year)
+                }
+                .resolve(year)
+                .periods()
                 ==
                 setOf(
                         Pair(start(2019, Month.JANUARY, 1, zone),

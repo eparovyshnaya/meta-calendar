@@ -102,11 +102,15 @@ internal class PeriodResolved(private val period: Period,
     }
 }
 
-internal class ResolvedCalendar(private val metaCalendar: MetaCalendar, private val year: Int, private val zone: ZoneId) {
-    fun dates() = metaCalendar.periods().asSequence()
-            .map { it.resolve(year, zone) }
-            .flatMap { it.asSequence() }
-            .toSet()
+class ResolvedCalendar(val meta: MetaCalendar, val year: Int, val zone: ZoneId) {
+    private val periods = Cashed(meta) { meta ->
+        meta.periods().asSequence()
+                .map { it.resolve(year, zone) }
+                .flatMap { it.asSequence() }
+                .toSet()
+    }
+
+    fun periods() = periods.get()
 }
 
 internal fun Pair<ZonedDateTime, ZonedDateTime>.notedResolvedPeriod(note: Any? = null) =

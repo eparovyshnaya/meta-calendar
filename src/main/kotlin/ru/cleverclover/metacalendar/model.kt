@@ -95,7 +95,7 @@ data class LastDayOfMonth(override val monthNo: Month,
  * */
 data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
     /**
-     * Resolve a period means mostly resolving both it's ends to precise dates.
+     * Resolve a period means mostly resolving both it's ends to precise periods.
      *
      * If a period is crosses a year,
      * resolution produces two periods, overlapping with the year partially.
@@ -135,9 +135,9 @@ class MetaCalendar(periods: Collection<Period> = setOf()) {
     fun size() = periods.size
 
     /**
-     * Bulk resolution for all contained periods resulting in a set of precise dates [Pair]s
+     * Bulk resolution for all contained periods resulting in a set of precise periods [Pair]s
      * */
-    fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, year, zone).dates()
+    fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, year, zone)
 }
 
 

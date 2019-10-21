@@ -122,8 +122,12 @@ data class NotedResolvedPeriod(val from: ZonedDateTime, val to: ZonedDateTime, v
  *
  * Provides bulk [resolve] for all periods on fell swoop.
  * */
-class MetaCalendar {
+class MetaCalendar(periods: Collection<Period> = setOf()) {
     private val periods = mutableSetOf<Period>()
+
+    init {
+        this.periods.addAll(periods)
+    }
 
     fun addPeriod(period: Period): Unit = run { periods.add(period) }
     fun removePeriod(period: Period): Unit = run { periods.remove(period) }

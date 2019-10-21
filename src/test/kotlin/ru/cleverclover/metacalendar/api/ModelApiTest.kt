@@ -23,7 +23,6 @@ class ModelApiTest {
     }
 
     private fun period() = Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 31))
-    private fun calendarOfOnePeriod(period: Period) = MetaCalendar().apply {
-        addPeriod(period)
-    }
+
+    private fun calendarOfOnePeriod(period: Period) = MetaCalendar(setOf(period))
 }

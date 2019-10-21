@@ -82,7 +82,7 @@ private fun firstDayOfNextMonth(mark: DayMark, year: Int): LocalDate {
 internal class PeriodResolved(private val period: Period,
                               private val year: Int,
                               private val zone: ZoneId) {
-    fun periods(): Set<Pair<ZonedDateTime, ZonedDateTime>> = with(period) {
+    fun periods() = with(period) {
         val thisYearStart = start.resolve(year, zone)
         val thisYearEnd = end.resolve(year, zone, false)
         val crossYearPeriod = thisYearStart > thisYearEnd
@@ -90,12 +90,14 @@ internal class PeriodResolved(private val period: Period,
             setOf(
                     Pair(
                             start.resolve(year - 1, zone),
-                            thisYearEnd),
+                            thisYearEnd)
+                            .notedResolvedPeriod(note),
                     Pair(
                             thisYearStart,
-                            end.resolve(year + 1, zone, false)))
+                            end.resolve(year + 1, zone, false))
+                            .notedResolvedPeriod(note))
         } else {
-            setOf(Pair(thisYearStart, thisYearEnd))
+            setOf(Pair(thisYearStart, thisYearEnd).notedResolvedPeriod(note))
         }
     }
 }
@@ -106,3 +108,6 @@ internal class ResolvedCalendar(private val metaCalendar: MetaCalendar, private 
             .flatMap { it.asSequence() }
             .toSet()
 }
+
+internal fun Pair<ZonedDateTime, ZonedDateTime>.notedResolvedPeriod(note: Any? = null) =
+        NotedResolvedPeriod(this.first, this.second, note)

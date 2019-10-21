@@ -1,8 +1,7 @@
 package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.DayOfMonth
-import ru.cleverclover.metacalendar.MetaCalendar
+import ru.cleverclover.metacalendar.*
 import ru.cleverclover.metacalendar.Period
 import java.time.*
 
@@ -11,19 +10,24 @@ class CalendarResolutionTest() : ResolutionTest() {
     @Test
     fun crossYearAndPlainPeriods() {
         val (year, zone) = Pair(2019, ZoneId.systemDefault())
+        val note = "Cross a year"
         assert(MetaCalendar()
                 .apply {
                     addPeriod(Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 21)))
-                    addPeriod(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12)))
+                    addPeriod(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12), note))
                 }.resolve(year)
                 ==
                 setOf(
                         Pair(start(2019, Month.JANUARY, 1, zone),
-                                end(2019, Month.JANUARY, 21, zone)),
+                                end(2019, Month.JANUARY, 21, zone))
+                                .notedResolvedPeriod(),
                         Pair(start(2019, Month.NOVEMBER, 21, zone),
-                                end(2020, Month.JANUARY, 12, zone)),
-                        Pair(start(2018, Month.NOVEMBER, 21, zone),
-                                end(2019, Month.JANUARY, 12, zone))
+                                end(2020, Month.JANUARY, 12, zone))
+                                .notedResolvedPeriod(note),
+                        NotedResolvedPeriod(
+                                start(2018, Month.NOVEMBER, 21, zone),
+                                end(2019, Month.JANUARY, 12, zone),
+                                note)
                 ))
     }
 

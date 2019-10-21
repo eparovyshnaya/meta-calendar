@@ -3,6 +3,7 @@ package ru.cleverclover.metacalendar
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.ZoneId
+import java.time.ZonedDateTime
 
 /**
  * Model for a point on a [MetaCalendar].
@@ -108,6 +109,13 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
     fun resolve(year: Int, zone: ZoneId) = PeriodResolved(this, year, zone).periods()
 }
 
+data class NotedResolvedPeriod(val from: ZonedDateTime, val to: ZonedDateTime, val note: Any? = null) {
+    init {
+        require(from <= to) { "Resolved period validation error: from-mark must be less or equal than to-mark" }
+    }
+
+    fun bounds() = Pair(from, to)
+}
 
 /**
  * Is a simple aggregator for [Period]s, which are not ordered here.

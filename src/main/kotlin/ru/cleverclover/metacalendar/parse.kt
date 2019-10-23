@@ -40,7 +40,8 @@ private object Definitions {
 }
 
 /**
- * The parsing for a natural language string to a [MetaCalendar]'s [Period]
+ * The parsing for a natural language string to a [MetaCalendar]'s [Period],
+ * defined for the whole period description.
  *
  * Sample input is *с конца февраля по третий вторник августа*
  * */
@@ -52,6 +53,12 @@ class PeriodFromRangeDefinition(private val origin: String) {
     }
 }
 
+/**
+ * The parsing for a natural language string to a [MetaCalendar]'s [Period],
+ * defined for the boundary day marks descriptions.
+ *
+ * Sample input is {*конец февраля*, *третий вторник августа*}
+ * */
 class PeriodFromBoundDefinitions(private val startDefinition: String?,
                                  private val endDefinition: String?) {
     fun bounds(): Pair<DayMark, DayMark> {

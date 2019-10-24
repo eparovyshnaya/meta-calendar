@@ -20,16 +20,43 @@ class CalendarResolutionTest() : ResolutionTest() {
                 .periods()
                 ==
                 setOf(
-                        Pair(start(2019, Month.JANUARY, 1, zone),
-                                end(2019, Month.JANUARY, 21, zone))
+                        Pair(start(year, Month.JANUARY, 1, zone),
+                                end(year, Month.JANUARY, 21, zone))
                                 .notedResolvedPeriod(),
-                        Pair(start(2019, Month.NOVEMBER, 21, zone),
-                                end(2020, Month.JANUARY, 12, zone))
+                        Pair(start(year, Month.NOVEMBER, 21, zone),
+                                end(year + 1, Month.JANUARY, 12, zone))
                                 .notedResolvedPeriod(note),
                         NotedResolvedPeriod(
-                                start(2018, Month.NOVEMBER, 21, zone),
-                                end(2019, Month.JANUARY, 12, zone),
+                                start(year - 1, Month.NOVEMBER, 21, zone),
+                                end(year, Month.JANUARY, 12, zone),
                                 note)
+                ))
+    }
+
+    @Test
+    fun distinctResolvedPeriods() {
+        val zone = ZoneId.systemDefault()
+
+        // given: we have a calendar of a single cross-year period
+        val calendar = MetaCalendar()
+                .apply { addPeriod(Period(DayOfMonth(Month.DECEMBER, 31), DayOfMonth(Month.JANUARY, 1))) }
+
+        // when: we resolve it to a couple of subsequent years
+        val periods = calendar.resolve(setOf(2019, 2020)).periods()
+
+        // then: despite a cross-year period for a particular year is resolved to 2 periods,
+        //       at the end of the day have only 3 distinct resolved periods
+        assert(periods ==
+                setOf(
+                        Pair(start(2018, Month.DECEMBER, 31, zone),
+                                end(2019, Month.JANUARY, 1, zone))
+                                .notedResolvedPeriod(),
+                        Pair(start(2019, Month.DECEMBER, 31, zone),
+                                end(2020, Month.JANUARY, 1, zone))
+                                .notedResolvedPeriod(),
+                        Pair(start(2020, Month.DECEMBER, 31, zone),
+                                end(2021, Month.JANUARY, 1, zone))
+                                .notedResolvedPeriod()
                 ))
     }
 

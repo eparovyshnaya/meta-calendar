@@ -127,7 +127,14 @@ class MetaCalendar(periods: Collection<Period> = setOf()) {
     fun size() = periods.size
 
     /**
-     * Bulk resolution for all contained periods resulting in a set of precise periods [Pair]s
+     * Lazy bulk resolution for all contained periods for the [year] and [zone]
+     * @return [ResolvedCalendar] instance
      * */
     fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, year, zone)
+
+    /**
+     * Lazy bulk resolution for all contained periods in all listed [years] and the [zone] in one fell swoop.
+     * @return [ResolvedCalendar] instance
+     * */
+    fun resolve(years: Set<Int>, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, years, zone)
 }

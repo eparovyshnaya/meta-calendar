@@ -27,7 +27,7 @@ Instead, they are expressed freely like
  
 ## what's the use 
 Not much of it, actually. You can
- - **construct** these periods out of natural language phrases like the ones listed above, or by formal api
+ - **construct** these periods out of natural language phrases like the ones listed above, or by formal API
 >by dsl (have a look at [DslTest](src/test/kotlin/ru/cleverclover/metacalendar/compose/DslTest.kt))
  ```kotlin
     calendar {
@@ -42,7 +42,7 @@ Not much of it, actually. You can
             )
     }
 ```
->by nl api (see [PeriodParseTest](src/test/kotlin/ru/cleverclover/metacalendar/parse/PeriodParseTest.kt) 
+>by natural language API (see [PeriodParseTest](src/test/kotlin/ru/cleverclover/metacalendar/parse/PeriodParseTest.kt) 
 >and [ModelApiTest](src/test/kotlin/ru/cleverclover/metacalendar/api/ModelApiTest.kt))
  ```kotlin
     MetaCalendar(
@@ -50,7 +50,7 @@ Not much of it, actually. You can
         PeriodFromBoundDefinitions("1 января", "8 июля").bounds().period()
     )
 ```
->by regular api
+>by regular API
 ```kotlin
 MetaCalendar(Period(DayOfMonth(Month.JANUARY, 1),  LastDayOfMonth(Month.FEBRUARY)))
 ```
@@ -63,7 +63,7 @@ MetaCalendar(Period(DayOfMonth(Month.APRIL, 12), LastDayOfMonth(Month.APRIL)))
     .resolve(2019)
 ```
 
-#### how to plug
+## how to plug
 
  - the library distributive resides under [jcenter](https://mvnrepository.com/repos/jcenter) maven repository.
  To add a repository to your, say, gradle build, use the dedicated gradle dsl function
@@ -86,6 +86,5 @@ repositories {
     compile 'ru.clever-clover.meta-calendar:meta-calendar:1.0.1'
 ``` 
 
-#### yet to be done
+## yet to be done
  - i18n is going to happen, currently ru-l10n is embedded [#6](https://github.com/eparovyshnaya/meta-calendar/issues/6)
-

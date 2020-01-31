@@ -15,34 +15,46 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.LastDayOfMonth
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.ParsedDayMark
+import ru.cleverclover.metacalendar.meta.LastDayOfMonth
 import java.time.Month
 
 class EndOfMonthMarkParseTest {
 
     @Test
     fun regular() =
-        assert(ParsedDayMark("конец июня").mark() == LastDayOfMonth(Month.JUNE))
+        assert(
+            ParsedDayMark("конец июня").mark() == LastDayOfMonth(
+            Month.JUNE
+        )
+        )
 
     @Test
     fun february() =
-        assert(ParsedDayMark("28 (29) февраля").mark() == LastDayOfMonth(Month.FEBRUARY))
+        assert(
+            ParsedDayMark("28 (29) февраля").mark() == LastDayOfMonth(
+            Month.FEBRUARY
+        )
+        )
 
     @Test
     fun incorrectFormatFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю-хрю").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "хрю-хрю-хрю"
+        ).mark() }
     }
 
     @Test
     fun unknownMonthFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("конец хрюкабря").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "конец хрюкабря"
+        ).mark() }
     }
 
     @Test
     fun unknownEndTitleFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("END-OF ноябрь").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "END-OF ноябрь"
+        ).mark() }
     }
 
 }

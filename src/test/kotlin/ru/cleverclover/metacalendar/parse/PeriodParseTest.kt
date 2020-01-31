@@ -15,7 +15,7 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.*
+import ru.cleverclover.metacalendar.meta.DayOfMonth
 import java.time.Month
 
 class PeriodParseTest {

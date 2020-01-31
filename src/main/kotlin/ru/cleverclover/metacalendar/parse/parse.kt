@@ -11,8 +11,10 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
-package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar.parse
 
+import ru.cleverclover.metacalendar.Cashed
+import ru.cleverclover.metacalendar.meta.*
 import java.time.DayOfWeek
 import java.time.Month
 
@@ -38,11 +40,14 @@ private object Definitions {
     private const val groupMonth = "(янв.*|февр.*|март.*|апр.*|мая|июн.*|июл.*|авг.*|сен.*|окт.*|ноя.*|дек.*)"
     private const val groupWeekday = "(пон.*|вт.*|ср.*|чет.*|пят.*|суб.*|вос.*)"
 
-    private val periodDefinition = Cashed("\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*") { it.toRegex() }
-    private val dayOfMonthMarkDefinition = Cashed("\\s*(\\d{1,2})\\s+$groupMonth\\s*") { it.toRegex() }
+    private val periodDefinition =
+        Cashed("\\s*со?\\s+(.+)\\s+по\\s+(.+)\\s*") { it.toRegex() }
+    private val dayOfMonthMarkDefinition =
+        Cashed("\\s*(\\d{1,2})\\s+$groupMonth\\s*") { it.toRegex() }
     private val lastWeekdayInMonthMarkDefinition =
         Cashed("\\s*послед.*\\s+$groupWeekday\\s+$groupMonth\\s*") { it.toRegex() }
-    private val lastDayInMonthMarkDefinition = Cashed("\\s*(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
+    private val lastDayInMonthMarkDefinition =
+        Cashed("\\s*(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
     private val lastDayInFebMarkDefinition =
         Cashed("\\s*(28\\s*\\(\\s*29\\s*\\)\\s+(февр.*))|(кон.*\\s+$groupMonth)\\s*") { it.toRegex() }
     private val dayOfWeekMarkDefinition =
@@ -68,7 +73,10 @@ class PeriodFromRangeDefinition(private val origin: String) {
     fun bounds(): Pair<DayMark, DayMark> {
         val matcher = Definitions.period().matchEntire(origin)
             ?: throw MetaCalendarParseException("no periods definition in $origin")
-        return PeriodFromBoundDefinitions(matcher.groups[1]?.value, matcher.groups[2]?.value).bounds()
+        return PeriodFromBoundDefinitions(
+            matcher.groups[1]?.value,
+            matcher.groups[2]?.value
+        ).bounds()
     }
 
 }
@@ -99,7 +107,8 @@ class PeriodFromBoundDefinitions(
 
 }
 
-fun Pair<DayMark, DayMark>.period(note: Any? = null) = Period(first, second, note)
+fun Pair<DayMark, DayMark>.period(note: Any? = null) =
+    Period(first, second, note)
 
 internal class ParsedDayMark(private val origin: String) {
 
@@ -212,7 +221,9 @@ internal object MonthResolved {
         "дек" to Month.DECEMBER
     )
 
-    fun month(name: String) = resolution[name.take(3)] ?: throw MetaCalendarParseException("Unknown month $name")
+    fun month(name: String) = resolution[name.take(3)] ?: throw MetaCalendarParseException(
+        "Unknown month $name"
+    )
 
 }
 

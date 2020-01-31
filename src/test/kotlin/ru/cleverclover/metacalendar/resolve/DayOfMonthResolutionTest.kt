@@ -15,7 +15,7 @@ package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.DayOfMonth
+import ru.cleverclover.metacalendar.meta.DayOfMonth
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId

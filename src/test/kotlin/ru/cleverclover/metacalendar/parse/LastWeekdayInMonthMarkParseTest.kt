@@ -15,9 +15,7 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.LastWeekdayInMonth
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.ParsedDayMark
+import ru.cleverclover.metacalendar.meta.LastWeekdayInMonth
 import java.time.DayOfWeek
 import java.time.Month
 
@@ -27,27 +25,38 @@ class LastWeekdayInMonthMarkParseTest {
     fun parsed() =
         assert(
             ParsedDayMark("последний вторник ноября").mark() ==
-                    LastWeekdayInMonth(Month.NOVEMBER, DayOfWeek.TUESDAY)
+                    LastWeekdayInMonth(
+                        Month.NOVEMBER,
+                        DayOfWeek.TUESDAY
+                    )
         )
 
     @Test
     fun incorrectFormatFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю-хрю").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "хрю-хрю-хрю"
+        ).mark() }
     }
 
     @Test
     fun incorrectWeekNoFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю вторник ноября").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "хрю-хрю вторник ноября"
+        ).mark() }
     }
 
     @Test
     fun incorrectDayOfMonthFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("первый хрю-хрю ноября").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "первый хрю-хрю ноября"
+        ).mark() }
     }
 
     @Test
     fun incorrectMonthFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("первый четверг хрюкабря").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "первый четверг хрюкабря"
+        ).mark() }
     }
 
 }

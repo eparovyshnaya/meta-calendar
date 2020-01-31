@@ -14,9 +14,9 @@
 package ru.cleverclover.metacalendar.api
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.DayOfMonth
-import ru.cleverclover.metacalendar.MetaCalendar
-import ru.cleverclover.metacalendar.Period
+import ru.cleverclover.metacalendar.meta.DayOfMonth
+import ru.cleverclover.metacalendar.meta.MetaCalendar
+import ru.cleverclover.metacalendar.meta.Period
 import java.time.Month
 
 /**
@@ -40,6 +40,11 @@ class ModelApiTest {
     }
 
     private fun period(note: String? = null) =
-        Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 31), note)
+        Period(
+            DayOfMonth(
+                Month.JANUARY,
+                1
+            ), DayOfMonth(Month.JANUARY, 31), note
+        )
 
 }

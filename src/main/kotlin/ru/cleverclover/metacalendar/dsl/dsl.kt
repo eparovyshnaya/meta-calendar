@@ -11,7 +11,12 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
-package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar.dsl
+
+import ru.cleverclover.metacalendar.parse.PeriodFromBoundDefinitions
+import ru.cleverclover.metacalendar.parse.PeriodFromRangeDefinition
+import ru.cleverclover.metacalendar.meta.MetaCalendar
+import ru.cleverclover.metacalendar.parse.period
 
 /**
  * In-here specific [scope-controlling annotation](https://kotlinlang.org/api/latest/jvm/stdlib/kotlin/-dsl-marker/index.html)

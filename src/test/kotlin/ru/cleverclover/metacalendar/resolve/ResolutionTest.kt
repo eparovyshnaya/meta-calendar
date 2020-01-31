@@ -13,7 +13,7 @@
  */
 package ru.cleverclover.metacalendar.resolve
 
-import ru.cleverclover.metacalendar.DayMark
+import ru.cleverclover.metacalendar.meta.DayMark
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId

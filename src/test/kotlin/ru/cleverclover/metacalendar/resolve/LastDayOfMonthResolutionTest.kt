@@ -14,7 +14,7 @@
 package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.LastDayOfMonth
+import ru.cleverclover.metacalendar.meta.LastDayOfMonth
 import java.time.LocalDate
 import java.time.Month
 

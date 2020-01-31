@@ -14,7 +14,9 @@
 package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.*
+import ru.cleverclover.metacalendar.meta.DayOfMonth
+import ru.cleverclover.metacalendar.meta.MetaCalendar
+import ru.cleverclover.metacalendar.meta.Period
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -26,10 +28,25 @@ class CalendarResolutionTest : ResolutionTest() {
     fun crossYearAndPlainPeriods() {
         val (year, zone) = Pair(2019, ZoneId.systemDefault())
         val note = "Cross a year"
-        assert(MetaCalendar()
+        assert(
+            MetaCalendar()
             .apply {
-                add(Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 21)))
-                add(Period(DayOfMonth(Month.NOVEMBER, 21), DayOfMonth(Month.JANUARY, 12), note))
+                add(
+                    Period(
+                        DayOfMonth(
+                            Month.JANUARY,
+                            1
+                        ), DayOfMonth(Month.JANUARY, 21)
+                    )
+                )
+                add(
+                    Period(
+                        DayOfMonth(
+                            Month.NOVEMBER,
+                            21
+                        ), DayOfMonth(Month.JANUARY, 12), note
+                    )
+                )
             }
             .resolve(year)
             .periods()
@@ -59,7 +76,14 @@ class CalendarResolutionTest : ResolutionTest() {
 
         // given: we have a calendar of a single cross-year period
         val calendar = MetaCalendar()
-            .apply { add(Period(DayOfMonth(Month.DECEMBER, 31), DayOfMonth(Month.JANUARY, 1))) }
+            .apply { add(
+                Period(
+                    DayOfMonth(
+                        Month.DECEMBER,
+                        31
+                    ), DayOfMonth(Month.JANUARY, 1)
+                )
+            ) }
 
         // when: we resolve it to a couple of subsequent years
         val periods = calendar.resolve(setOf(2019, 2020)).periods()

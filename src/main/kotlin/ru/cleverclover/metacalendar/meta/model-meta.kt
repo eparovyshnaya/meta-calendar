@@ -11,8 +11,15 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
-package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar.meta
 
+import ru.cleverclover.metacalendar.resolve.*
+import ru.cleverclover.metacalendar.resolve.DayOfMonthResolved
+import ru.cleverclover.metacalendar.resolve.LastDayOfMonthResolved
+import ru.cleverclover.metacalendar.resolve.LastWeekdayInMonthResolved
+import ru.cleverclover.metacalendar.resolve.MarkResolved
+import ru.cleverclover.metacalendar.resolve.PeriodResolved
+import ru.cleverclover.metacalendar.resolve.WeekdayInMonthResolved
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.ZoneId
@@ -89,7 +96,12 @@ data class LastWeekdayInMonth(
     override val note: Any? = null
 ) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
-        LastWeekdayInMonthResolved(this, year, zone, startOfADay)
+        LastWeekdayInMonthResolved(
+            this,
+            year,
+            zone,
+            startOfADay
+        )
 
     override fun toString() = "The last ${weekday.name} in ${monthNo.name}"
 
@@ -138,7 +150,11 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
      *
      *  as the both are valuable for the year of 2019.
      * */
-    fun resolve(year: Int, zone: ZoneId) = PeriodResolved(this, year, zone).periods()
+    fun resolve(year: Int, zone: ZoneId) = PeriodResolved(
+        this,
+        year,
+        zone
+    ).periods()
 
 }
 
@@ -166,12 +182,14 @@ class MetaCalendar(periods: Collection<Period> = setOf()) {
      * Lazy bulk resolution for all contained periods for the [year] and [zone]
      * @return [ResolvedCalendar] instance
      * */
-    fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, year, zone)
+    fun resolve(year: Int, zone: ZoneId = ZoneId.systemDefault()) =
+        ResolvedCalendar(this, year, zone)
 
     /**
      * Lazy bulk resolution for all contained periods in all listed [years] and the [zone] in one fell swoop.
      * @return [ResolvedCalendar] instance
      * */
-    fun resolve(years: Set<Int>, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, years, zone)
+    fun resolve(years: Set<Int>, zone: ZoneId = ZoneId.systemDefault()) =
+        ResolvedCalendar(this, years, zone)
 
 }

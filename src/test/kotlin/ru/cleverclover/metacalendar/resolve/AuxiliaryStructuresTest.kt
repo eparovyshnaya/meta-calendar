@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.MonthResolved
-import ru.cleverclover.metacalendar.WeekNoResolved
-import ru.cleverclover.metacalendar.WeekdayResolved
+import ru.cleverclover.metacalendar.parse.MetaCalendarParseException
+import ru.cleverclover.metacalendar.parse.MonthResolved
+import ru.cleverclover.metacalendar.parse.WeekNoResolved
+import ru.cleverclover.metacalendar.parse.WeekdayResolved
 import java.time.DayOfWeek
 import java.time.Month
 

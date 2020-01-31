@@ -15,7 +15,8 @@ package ru.cleverclover.metacalendar.compose
 
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.*
+import ru.cleverclover.metacalendar.dsl.calendar
+import ru.cleverclover.metacalendar.meta.*
 import java.time.DayOfWeek
 import java.time.Month
 
@@ -25,7 +26,11 @@ class DslTest {
     fun readDsl() = assertPeriodsAreOk(
         create(), setOf(
             Period(
-                WeekdayInMonth(Month.NOVEMBER, 3, DayOfWeek.WEDNESDAY),
+                WeekdayInMonth(
+                    Month.NOVEMBER,
+                    3,
+                    DayOfWeek.WEDNESDAY
+                ),
                 DayOfMonth(Month.JANUARY, 1),
                 "dark time"
             ),
@@ -40,7 +45,11 @@ class DslTest {
             ),
             Period(
                 LastDayOfMonth(Month.AUGUST),
-                WeekdayInMonth(Month.SEPTEMBER, 3, DayOfWeek.FRIDAY),
+                WeekdayInMonth(
+                    Month.SEPTEMBER,
+                    3,
+                    DayOfWeek.FRIDAY
+                ),
                 "школа"
             )
         )

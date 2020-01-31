@@ -14,7 +14,7 @@
 package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.LastWeekdayInMonth
+import ru.cleverclover.metacalendar.meta.LastWeekdayInMonth
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
@@ -32,7 +32,10 @@ class LastWeekdayInMonthResolutionTest : ResolutionTest() {
     @Test
     fun fourthWeekday() {
         testResolution(
-            LastWeekdayInMonth(Month.SEPTEMBER, DayOfWeek.SATURDAY),
+            LastWeekdayInMonth(
+                Month.SEPTEMBER,
+                DayOfWeek.SATURDAY
+            ),
             LocalDate.of(2019, Month.SEPTEMBER, 28)
         )
     }

@@ -17,9 +17,7 @@ import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.ValueSource
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.ParsedDayMark
-import ru.cleverclover.metacalendar.WeekdayInMonth
+import ru.cleverclover.metacalendar.meta.WeekdayInMonth
 import java.time.DayOfWeek
 import java.time.Month
 
@@ -35,7 +33,11 @@ class WeekdayInMonthMarlParseTest {
     fun parsed(origin: String, weekNo: Int, weekDay: Int, month: Int) =
         assert(
             ParsedDayMark(origin).mark() ==
-                    WeekdayInMonth(Month.of(month), weekNo, DayOfWeek.of(weekDay))
+                    WeekdayInMonth(
+                        Month.of(month),
+                        weekNo,
+                        DayOfWeek.of(weekDay)
+                    )
         )
 
     @ParameterizedTest(name = "wait failure for {0}")
@@ -48,7 +50,9 @@ class WeekdayInMonthMarlParseTest {
         ]
     )
     fun incorrectFormatFails(origin: String) {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark(origin).mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            origin
+        ).mark() }
     }
 
 }

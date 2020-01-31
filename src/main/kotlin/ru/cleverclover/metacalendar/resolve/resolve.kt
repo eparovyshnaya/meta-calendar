@@ -11,8 +11,10 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
-package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar.resolve
 
+import ru.cleverclover.metacalendar.meta.*
+import ru.cleverclover.metacalendar.meta.Period
 import java.time.*
 import java.time.temporal.ChronoField
 
@@ -60,7 +62,11 @@ internal class LastWeekdayInMonthResolved(
 ) : MarkResolved() {
 
     override fun date(): ZonedDateTime {
-        var time = ZonedDateTime.of(firstDayOfNextMonth(mark, year), dayBeacon(startOfADay), zone)
+        var time = ZonedDateTime.of(
+            firstDayOfNextMonth(
+                mark,
+                year
+            ), dayBeacon(startOfADay), zone)
         do {
             time = time.minusDays(1)
         } while (time.dayOfWeek != mark.weekday)

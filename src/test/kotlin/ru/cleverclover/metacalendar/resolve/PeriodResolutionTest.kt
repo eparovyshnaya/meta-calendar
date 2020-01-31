@@ -13,13 +13,13 @@
  */
 package ru.cleverclover.metacalendar.resolve
 
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.ValueSource
-import ru.cleverclover.metacalendar.DayOfMonth
-import ru.cleverclover.metacalendar.Period
-import ru.cleverclover.metacalendar.notedResolvedPeriod
+import ru.cleverclover.metacalendar.meta.DayOfMonth
+import ru.cleverclover.metacalendar.meta.Period
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -107,6 +107,15 @@ class PeriodResolutionTest : ResolutionTest() {
             )
                 .notedResolvedPeriod()
         }
+    }
+
+    @Test
+    fun reversible() {
+        val source = Pair(
+            ZonedDateTime.of(LocalDate.of(2017, Month.JANUARY, 1), startingHour, ZoneId.systemDefault()),
+            ZonedDateTime.of(LocalDate.of(2018, Month.JANUARY, 1), endingHour, ZoneId.systemDefault())
+        )
+        Assertions.assertEquals(source, source.notedResolvedPeriod().bounds())
     }
 
 }

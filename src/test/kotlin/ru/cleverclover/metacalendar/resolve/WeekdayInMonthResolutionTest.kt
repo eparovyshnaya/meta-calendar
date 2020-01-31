@@ -14,7 +14,7 @@
 package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
-import ru.cleverclover.metacalendar.WeekdayInMonth
+import ru.cleverclover.metacalendar.meta.WeekdayInMonth
 import java.time.DayOfWeek
 import java.time.LocalDate
 import java.time.Month
@@ -34,7 +34,8 @@ class WeekdayInMonthResolutionTest : ResolutionTest() {
      * */
     @Test
     fun monthStartsAfterTheDay() {
-        val mark = WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.MONDAY)
+        val mark =
+            WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.MONDAY)
         val expectedDate = LocalDate.of(2019, Month.AUGUST, 12)
         testResolution(mark, expectedDate)
     }
@@ -45,7 +46,8 @@ class WeekdayInMonthResolutionTest : ResolutionTest() {
      * */
     @Test
     fun monthStartsWithTheDay() {
-        val mark = WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.THURSDAY)
+        val mark =
+            WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.THURSDAY)
         val expectedDate = LocalDate.of(2019, Month.AUGUST, 8)
         testResolution(mark, expectedDate)
     }
@@ -58,7 +60,8 @@ class WeekdayInMonthResolutionTest : ResolutionTest() {
      * */
     @Test
     fun monthStartsBeforeTheDay() {
-        val mark = WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.FRIDAY)
+        val mark =
+            WeekdayInMonth(Month.AUGUST, 2, DayOfWeek.FRIDAY)
         val expectedDate = LocalDate.of(2019, Month.AUGUST, 9)
         testResolution(mark, expectedDate)
     }

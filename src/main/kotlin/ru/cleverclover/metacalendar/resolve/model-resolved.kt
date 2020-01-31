@@ -11,8 +11,10 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
-package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar.resolve
 
+import ru.cleverclover.metacalendar.Cashed
+import ru.cleverclover.metacalendar.meta.MetaCalendar
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
@@ -21,16 +23,16 @@ import java.time.ZonedDateTime
  *
  * Does not perform actual resolution until resolved periods are queried.
  * */
-class ResolvedCalendar(meta: MetaCalendar, val years: Set<Int>, val zone: ZoneId) {
+class ResolvedCalendar(meta: MetaCalendar, private val years: Set<Int>, val zone: ZoneId) {
     private val periods = Cashed(meta) { meta ->
         years.map { year ->
             meta.periods().asSequence()
-                    .map { it.resolve(year, zone) }
-                    .flatMap { it.asSequence() }
-                    .toSet()
-        }
-                .flatten()
+                .map { it.resolve(year, zone) }
+                .flatMap { it.asSequence() }
                 .toSet()
+        }
+            .flatten()
+            .toSet()
 
     }
 
@@ -43,7 +45,7 @@ class ResolvedCalendar(meta: MetaCalendar, val years: Set<Int>, val zone: ZoneId
 }
 
 /**
- * Represents a resolution result for a [Period]
+ * Represents a resolution result for a [ru.cleverclover.metacalendar.meta.Period]
  * */
 data class NotedResolvedPeriod(val from: ZonedDateTime, val to: ZonedDateTime, val note: Any? = null) {
     init {
@@ -58,4 +60,4 @@ data class NotedResolvedPeriod(val from: ZonedDateTime, val to: ZonedDateTime, v
 
 
 internal fun Pair<ZonedDateTime, ZonedDateTime>.notedResolvedPeriod(note: Any? = null) =
-        NotedResolvedPeriod(this.first, this.second, note)
+    NotedResolvedPeriod(this.first, this.second, note)

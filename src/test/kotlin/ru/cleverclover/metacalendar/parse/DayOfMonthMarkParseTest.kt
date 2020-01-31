@@ -15,30 +15,39 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.DayOfMonth
-import ru.cleverclover.metacalendar.MetaCalendarParseException
-import ru.cleverclover.metacalendar.ParsedDayMark
+import ru.cleverclover.metacalendar.meta.DayOfMonth
 import java.time.Month
 
 class DayOfMonthMarkParseTest {
 
     @Test
     fun parsed() =
-        assert(ParsedDayMark("11 января").mark() == DayOfMonth(Month.JANUARY, 11))
+        assert(
+            ParsedDayMark("11 января").mark() == DayOfMonth(
+            Month.JANUARY,
+            11
+        )
+        )
 
     @Test
     fun incorrectFormatFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("хрю-хрю хрю-хрю-хрю").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "хрю-хрю хрю-хрю-хрю"
+        ).mark() }
     }
 
     @Test
     fun outOfBoundDayFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("33 января").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "33 января"
+        ).mark() }
     }
 
     @Test
     fun unknownMonthFails() {
-        assertThrows<MetaCalendarParseException> { ParsedDayMark("24 хрюкабря").mark() }
+        assertThrows<MetaCalendarParseException> { ParsedDayMark(
+            "24 хрюкабря"
+        ).mark() }
     }
 
 }

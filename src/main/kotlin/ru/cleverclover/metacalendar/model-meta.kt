@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -16,7 +16,6 @@ package ru.cleverclover.metacalendar
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.ZoneId
-import java.time.ZonedDateTime
 
 /**
  * Model for a point on a [MetaCalendar].
@@ -26,26 +25,33 @@ import java.time.ZonedDateTime
  * The only thing it should do - be able to [resolve] oneself
  * */
 abstract class DayMark {
+
     abstract val monthNo: Month
     abstract val note: Any?
     /**
      * Resolve the mark to a precise year and time zone: find out exact _date_
      * */
-    open fun resolve(year: Int, zone: ZoneId, startOfADay: Boolean = true) = resolvedMark(year, zone, startOfADay).date()
+    open fun resolve(year: Int, zone: ZoneId, startOfADay: Boolean = true) =
+        resolvedMark(year, zone, startOfADay).date()
 
     internal abstract fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean): MarkResolved
+
 }
 
 /**
  * Like *21-st of October*
  * */
-data class DayOfMonth(override val monthNo: Month,
-                      val dayNo: Int,
-                      override val note: Any? = null) : DayMark() {
+data class DayOfMonth(
+
+    override val monthNo: Month,
+    val dayNo: Int,
+    override val note: Any? = null
+) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
-            DayOfMonthResolved(this, year, zone, startOfADay)
+        DayOfMonthResolved(this, year, zone, startOfADay)
 
     override fun toString() = "$dayNo of ${monthNo.name}"
+
 }
 
 /**
@@ -59,26 +65,34 @@ data class DayOfMonth(override val monthNo: Month,
  * @param[weekNoInMonth] should stay in the range {1, 2, 3, 4} to be resolvable. Convention is to use *-1* value for *the last*.
  * @param[weekday] one of [java.time.DayOfWeek] constants
  * */
-data class WeekdayInMonth(override val monthNo: Month,
-                          val weekNoInMonth: Int,
-                          val weekday: DayOfWeek,
-                          override val note: Any? = null) : DayMark() {
+data class WeekdayInMonth(
+
+    override val monthNo: Month,
+    val weekNoInMonth: Int,
+    val weekday: DayOfWeek,
+    override val note: Any? = null
+) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
-            WeekdayInMonthResolved(this, year, zone, startOfADay)
+        WeekdayInMonthResolved(this, year, zone, startOfADay)
 
     override fun toString() = "${weekday.name} #$weekNoInMonth in ${monthNo.name}"
+
 }
 
 /**
  * Like *the last Wednesday in June*
  * */
-data class LastWeekdayInMonth(override val monthNo: Month,
-                              val weekday: DayOfWeek,
-                              override val note: Any? = null) : DayMark() {
+data class LastWeekdayInMonth(
+
+    override val monthNo: Month,
+    val weekday: DayOfWeek,
+    override val note: Any? = null
+) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
-            LastWeekdayInMonthResolved(this, year, zone, startOfADay)
+        LastWeekdayInMonthResolved(this, year, zone, startOfADay)
 
     override fun toString() = "The last ${weekday.name} in ${monthNo.name}"
+
 }
 
 /**
@@ -86,12 +100,16 @@ data class LastWeekdayInMonth(override val monthNo: Month,
  *
  * For February it means 29-th for leap years and 28-th for the rest of 'em
  * */
-data class LastDayOfMonth(override val monthNo: Month,
-                          override val note: Any? = null) : DayMark() {
+data class LastDayOfMonth(
+
+    override val monthNo: Month,
+    override val note: Any? = null
+) : DayMark() {
     override fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean) =
-            LastDayOfMonthResolved(this, year, zone, startOfADay)
+        LastDayOfMonthResolved(this, year, zone, startOfADay)
 
     override fun toString() = "The last day of ${monthNo.name}"
+
 }
 
 /**
@@ -107,6 +125,7 @@ data class LastDayOfMonth(override val monthNo: Month,
  *
  * */
 data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
+
     /**
      * Resolve a period means mostly resolving both it's ends to precise periods.
      *
@@ -120,6 +139,7 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
      *  as the both are valuable for the year of 2019.
      * */
     fun resolve(year: Int, zone: ZoneId) = PeriodResolved(this, year, zone).periods()
+
 }
 
 /**
@@ -128,14 +148,15 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
  * Provides bulk [resolve] for all periods on fell swoop.
  * */
 class MetaCalendar(periods: Collection<Period> = setOf()) {
+
     private val periods = mutableSetOf<Period>()
 
     init {
         this.periods.addAll(periods)
     }
 
-    fun addPeriod(period: Period): Unit = run { periods.add(period) }
-    fun removePeriod(period: Period): Unit = run { periods.remove(period) }
+    fun add(period: Period): Unit = run { periods.add(period) }
+    fun remove(period: Period): Unit = run { periods.remove(period) }
     fun periods(): Set<Period> = periods
     fun size() = periods.size
 
@@ -150,4 +171,5 @@ class MetaCalendar(periods: Collection<Period> = setOf()) {
      * @return [ResolvedCalendar] instance
      * */
     fun resolve(years: Set<Int>, zone: ZoneId = ZoneId.systemDefault()) = ResolvedCalendar(this, years, zone)
+
 }

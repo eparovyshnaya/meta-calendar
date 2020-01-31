@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -15,7 +15,6 @@ package ru.cleverclover.metacalendar
 
 import java.time.ZoneId
 import java.time.ZonedDateTime
-
 
 /**
  * Aggregates result of a [MetaCalendar] resolution to a set of years in a particular time zone.

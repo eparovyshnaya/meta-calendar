@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -11,7 +11,7 @@
  *     CleverClover - initial API and implementation
  *******************************************************************************
  */
- package ru.cleverclover.metacalendar
+package ru.cleverclover.metacalendar
 
 /**
  * Orthodox OOP construction.
@@ -45,6 +45,7 @@
  * ```
  * */
 class Cashed<S, T>(private val source: S, private val retrieve: (S) -> T) {
+
     private val value = mutableListOf<T>()
 
     fun get(): T {
@@ -53,4 +54,5 @@ class Cashed<S, T>(private val source: S, private val retrieve: (S) -> T) {
         }
         return value[0]
     }
+
 }

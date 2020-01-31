@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -34,6 +34,7 @@ annotation class MetaCalendarDsl
 @Suppress("ClassName")
 @MetaCalendarDsl
 object calendar {
+
     /**
      * New [ConstructionContext] is created to be used as the [constructCalendar]'s
      * [receiver](https://kotlinlang.org/docs/reference/lambdas.html#function-literals-with-receiver).
@@ -45,6 +46,7 @@ object calendar {
         context.constructCalendar()
         return context.calendar
     }
+
 }
 
 /**
@@ -64,6 +66,7 @@ object calendar {
  * */
 @MetaCalendarDsl
 class ConstructionContext {
+
     val calendar = MetaCalendar()
 
     /**
@@ -72,12 +75,13 @@ class ConstructionContext {
      * From-natural-language parsing is used to recognize
      * */
     fun period(from: String, till: String, note: Any? = null) =
-            PeriodFromBoundDefinitions(from, till).bounds().let {
-                calendar.addPeriod(it.period(note))
-            }
+        PeriodFromBoundDefinitions(from, till).bounds().let {
+            calendar.add(it.period(note))
+        }
 
     fun period(range: String, note: Any? = null) =
-            PeriodFromRangeDefinition(range).bounds().let {
-                calendar.addPeriod(it.period(note))
-            }
+        PeriodFromRangeDefinition(range).bounds().let {
+            calendar.add(it.period(note))
+        }
+
 }

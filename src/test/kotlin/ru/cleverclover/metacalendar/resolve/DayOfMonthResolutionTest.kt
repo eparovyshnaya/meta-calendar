@@ -16,11 +16,11 @@ package ru.cleverclover.metacalendar.resolve
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import ru.cleverclover.metacalendar.meta.DayOfMonth
+import ru.cleverclover.metacalendar.meta.MetaCalendarResolveException
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
 
-//todo: test ending hour resolution
 class DayOfMonthResolutionTest : ResolutionTest() {
 
     @Test
@@ -40,8 +40,7 @@ class DayOfMonthResolutionTest : ResolutionTest() {
     @Test
     fun leapFailure() {
         val mark = DayOfMonth(Month.FEBRUARY, 29)
-        // todo: custom  exception
-        assertThrows<Exception> { mark.resolve(2019, ZoneId.systemDefault(), true) }
+        assertThrows<MetaCalendarResolveException> { mark.resolve(2019, ZoneId.systemDefault(), true) }
     }
 
 }

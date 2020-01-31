@@ -106,12 +106,10 @@ internal class LastDayOfMonthResolved(
 }
 
 private fun firstDayOfNextMonth(mark: DayMark, year: Int): LocalDate {
-
     val endOfYear = mark.monthNo == Month.DECEMBER
     val yearIncrement = if (endOfYear) 1 else 0
     val nextMonth = if (endOfYear) Month.JANUARY else mark.monthNo + 1
     return LocalDate.of(year + yearIncrement, nextMonth, 1)
-
 }
 
 /**

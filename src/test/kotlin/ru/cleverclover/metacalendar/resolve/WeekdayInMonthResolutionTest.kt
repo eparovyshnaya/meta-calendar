@@ -24,8 +24,6 @@ import java.time.Month
  * to the precise date on a year of, say, 2019.
  * What date will [the second monday of august] have in 2019?
  */
-// todo: test and describe failures
-
 class WeekdayInMonthResolutionTest : ResolutionTest() {
 
     /**

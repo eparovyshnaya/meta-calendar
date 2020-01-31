@@ -14,15 +14,14 @@
 package ru.cleverclover.metacalendar.meta
 
 import ru.cleverclover.metacalendar.resolve.*
-import ru.cleverclover.metacalendar.resolve.DayOfMonthResolved
-import ru.cleverclover.metacalendar.resolve.LastDayOfMonthResolved
-import ru.cleverclover.metacalendar.resolve.LastWeekdayInMonthResolved
-import ru.cleverclover.metacalendar.resolve.MarkResolved
-import ru.cleverclover.metacalendar.resolve.PeriodResolved
-import ru.cleverclover.metacalendar.resolve.WeekdayInMonthResolved
 import java.time.DayOfWeek
 import java.time.Month
 import java.time.ZoneId
+
+/**
+ * Resolution can went wrong in a variety of cases. Say, if you to resolve a fifth monday in December to a year, which does not have one.
+ */
+open class MetaCalendarResolveException(message: String, cause: Throwable? = null) : Exception(message, cause)
 
 /**
  * Model for a point on a [MetaCalendar].
@@ -39,7 +38,12 @@ abstract class DayMark {
      * Resolve the mark to a precise year and time zone: find out exact _date_
      * */
     open fun resolve(year: Int, zone: ZoneId, startOfADay: Boolean = true) =
-        resolvedMark(year, zone, startOfADay).date()
+        try {
+            resolvedMark(year, zone, startOfADay).date()
+        } catch (trouble: Throwable) {
+            throw MetaCalendarResolveException("Error on $this resolution to year $year, zone $zone ", trouble)
+        }
+
 
     internal abstract fun resolvedMark(year: Int, zone: ZoneId, startOfADay: Boolean): MarkResolved
 

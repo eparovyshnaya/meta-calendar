@@ -72,7 +72,7 @@ void extendManifest(Manifest mf) {
             'group': project.group,
             'artifact': project.name,
             'version': project.version,
-            'vendor': "$vendor"
+            'vendor': "$project_vendor"
     )
 }
 
@@ -97,7 +97,17 @@ jacocoTestReport {
 
 dokka {
     outputFormat = 'html'
-    outputDirectory = "$buildDir/javadoc"
+}
+
+javadocJar {
+    dependsOn += "dokka"
+    from dokka.outputDirectory
+}
+
+sourcesJar {
+    from sourceSets.getByName(SourceSet.MAIN_SOURCE_SET_NAME).getAllSource(),
+            sourceSets.getByName(SourceSet.TEST_SOURCE_SET_NAME).getAllSource(),
+            file("README.md")
 }
 
 publishing {
@@ -108,12 +118,12 @@ publishing {
             from components.java
             pom {
                 name = project.name
-                description = "DESCRIBE ME" // todo:
+                description = "$project_description"
                 url = 'https://github.com/eparovyshnaya/meta-calendar'
                 licenses {
                     license {
-                        name = 'The MIT License'
-                        url = 'https://opensource.org/licenses/mit-license.php'
+                        name = 'MIT License'
+                        url = 'https://spdx.org/licenses/MIT.html#licenseText'
                     }
                 }
                 developers {

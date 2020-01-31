@@ -149,6 +149,8 @@ data class Period(var start: DayMark, var end: DayMark, val note: Any? = null) {
  * */
 class MetaCalendar(periods: Collection<Period> = setOf()) {
 
+    constructor(vararg periods: Period) : this(periods.toSet())
+
     private val periods = mutableSetOf<Period>()
 
     init {

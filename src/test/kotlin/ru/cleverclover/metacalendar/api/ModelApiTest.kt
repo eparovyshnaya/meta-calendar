@@ -19,25 +19,27 @@ import ru.cleverclover.metacalendar.MetaCalendar
 import ru.cleverclover.metacalendar.Period
 import java.time.Month
 
+/**
+ * Illustrate api methods and three ways to construct and fill MetaCalendar
+ */
 class ModelApiTest {
 
     @Test
     fun addPeriod() {
-        assert(1 == calendarOfOnePeriod(period()).size())
+        assert(1 == MetaCalendar(setOf(period())).size())
     }
 
     @Test
-    fun iteratePeriod() {
-        assert(period() == calendarOfOnePeriod(period()).periods().random())
+    fun retrievePeriod() {
+        assert(period() == MetaCalendar().apply { add(period()) }.periods().random())
     }
 
     @Test
     fun removePeriod() {
-        assert(0 == calendarOfOnePeriod(period()).also { it.remove(period()) }.size())
+        assert(1 == MetaCalendar(period(), period("another")).also { it.remove(period()) }.size())
     }
 
-    private fun period() = Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 31))
-
-    private fun calendarOfOnePeriod(period: Period) = MetaCalendar(setOf(period))
+    private fun period(note: String? = null) =
+        Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 31), note)
 
 }

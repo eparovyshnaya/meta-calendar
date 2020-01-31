@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -15,14 +15,16 @@ package ru.cleverclover.metacalendar.parse
 
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
-import ru.cleverclover.metacalendar.*
+import ru.cleverclover.metacalendar.DayOfMonth
+import ru.cleverclover.metacalendar.MetaCalendarParseException
+import ru.cleverclover.metacalendar.ParsedDayMark
 import java.time.Month
 
 class DayOfMonthMarkParseTest {
 
     @Test
     fun parsed() =
-            assert(ParsedDayMark("11 января").mark() == DayOfMonth(Month.JANUARY, 11))
+        assert(ParsedDayMark("11 января").mark() == DayOfMonth(Month.JANUARY, 11))
 
     @Test
     fun incorrectFormatFails() {
@@ -38,4 +40,5 @@ class DayOfMonthMarkParseTest {
     fun unknownMonthFails() {
         assertThrows<MetaCalendarParseException> { ParsedDayMark("24 хрюкабря").mark() }
     }
+
 }

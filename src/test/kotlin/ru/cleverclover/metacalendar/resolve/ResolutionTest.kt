@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -14,9 +14,13 @@
 package ru.cleverclover.metacalendar.resolve
 
 import ru.cleverclover.metacalendar.DayMark
-import java.time.*
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.ZoneId
+import java.time.ZonedDateTime
 
 abstract class ResolutionTest {
+
     protected val startingHour = LocalTime.of(0, 0, 0, 0)!!
     protected val endingHour = LocalTime.of(23, 59, 59, 999)!!
 
@@ -36,4 +40,5 @@ abstract class ResolutionTest {
                       actual: $resolved"""
         }
     }
+
 }

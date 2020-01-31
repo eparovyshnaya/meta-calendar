@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -25,8 +25,10 @@ class LastWeekdayInMonthMarkParseTest {
 
     @Test
     fun parsed() =
-            assert(ParsedDayMark("последний вторник ноября").mark() ==
-                    LastWeekdayInMonth(Month.NOVEMBER, DayOfWeek.TUESDAY))
+        assert(
+            ParsedDayMark("последний вторник ноября").mark() ==
+                    LastWeekdayInMonth(Month.NOVEMBER, DayOfWeek.TUESDAY)
+        )
 
     @Test
     fun incorrectFormatFails() {
@@ -47,4 +49,5 @@ class LastWeekdayInMonthMarkParseTest {
     fun incorrectMonthFails() {
         assertThrows<MetaCalendarParseException> { ParsedDayMark("первый четверг хрюкабря").mark() }
     }
+
 }

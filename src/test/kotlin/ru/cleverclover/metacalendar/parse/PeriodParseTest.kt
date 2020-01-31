@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -60,4 +60,5 @@ class PeriodParseTest {
             PeriodFromBoundDefinitions("21 сентября", null).bounds().period()
         }
     }
+
 }

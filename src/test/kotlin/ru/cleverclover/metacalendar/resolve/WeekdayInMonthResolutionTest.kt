@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -15,7 +15,9 @@ package ru.cleverclover.metacalendar.resolve
 
 import org.junit.jupiter.api.Test
 import ru.cleverclover.metacalendar.WeekdayInMonth
-import java.time.*
+import java.time.DayOfWeek
+import java.time.LocalDate
+import java.time.Month
 
 /**
  * Here we bind *the second* - *monday* - *of august*
@@ -25,6 +27,7 @@ import java.time.*
 // todo: test and describe failures
 
 class WeekdayInMonthResolutionTest : ResolutionTest() {
+
     /**
      * August in 2019 starts after Monday,
      * so we expect the first partial week to be skipped

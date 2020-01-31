@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -19,6 +19,7 @@ import java.time.LocalDate
 import java.time.Month
 
 class LastDayOfMonthResolutionTest : ResolutionTest() {
+
     @Test
     fun leapFebruary() {
         val mark = LastDayOfMonth(Month.FEBRUARY)
@@ -46,4 +47,5 @@ class LastDayOfMonthResolutionTest : ResolutionTest() {
         val expectedDate = LocalDate.of(2019, Month.APRIL, 30)
         testResolution(mark, expectedDate)
     }
+
 }

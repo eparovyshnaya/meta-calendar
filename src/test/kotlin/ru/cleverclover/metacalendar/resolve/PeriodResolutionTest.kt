@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -20,7 +20,6 @@ import org.junit.jupiter.params.provider.ValueSource
 import ru.cleverclover.metacalendar.DayOfMonth
 import ru.cleverclover.metacalendar.Period
 import ru.cleverclover.metacalendar.notedResolvedPeriod
-import java.lang.IllegalArgumentException
 import java.time.LocalDate
 import java.time.Month
 import java.time.ZoneId
@@ -47,14 +46,17 @@ class PeriodResolutionTest : ResolutionTest() {
         // then
         assert(resolved.size == 2) { "Cross-year periods $period should be resolved twice, but we have $resolved" }
         val expectation = setOf(
-                Pair(
-                        ZonedDateTime.of(LocalDate.of(year - 1, startMonth, from.dayNo), startingHour, zone),
-                        ZonedDateTime.of(LocalDate.of(year, endMonth, to.dayNo), endingHour, zone))
-                        .notedResolvedPeriod(note),
-                Pair(
-                        ZonedDateTime.of(LocalDate.of(year, startMonth, from.dayNo), startingHour, zone),
-                        ZonedDateTime.of(LocalDate.of(year + 1, endMonth, to.dayNo), endingHour, zone))
-                        .notedResolvedPeriod(note))
+            Pair(
+                ZonedDateTime.of(LocalDate.of(year - 1, startMonth, from.dayNo), startingHour, zone),
+                ZonedDateTime.of(LocalDate.of(year, endMonth, to.dayNo), endingHour, zone)
+            )
+                .notedResolvedPeriod(note),
+            Pair(
+                ZonedDateTime.of(LocalDate.of(year, startMonth, from.dayNo), startingHour, zone),
+                ZonedDateTime.of(LocalDate.of(year + 1, endMonth, to.dayNo), endingHour, zone)
+            )
+                .notedResolvedPeriod(note)
+        )
         assert(resolved == expectation) {
             """
                Period $period is resolved incorrectly to year $year and zone $zone:
@@ -80,10 +82,12 @@ class PeriodResolutionTest : ResolutionTest() {
         // then
         assert(resolved.size == 1) { "The periods $period does not cross the year, should be resolved one, but we have $resolved" }
         val expectation = setOf(
-                Pair(
-                        ZonedDateTime.of(LocalDate.of(year, Month.JANUARY, 8), startingHour, zone),
-                        ZonedDateTime.of(LocalDate.of(year, Month.AUGUST, 2), endingHour, zone))
-                        .notedResolvedPeriod())
+            Pair(
+                ZonedDateTime.of(LocalDate.of(year, Month.JANUARY, 8), startingHour, zone),
+                ZonedDateTime.of(LocalDate.of(year, Month.AUGUST, 2), endingHour, zone)
+            )
+                .notedResolvedPeriod()
+        )
         assert(resolved == expectation) {
             """
                Period $period is resolved incorrectly to year $year and zone $zone:
@@ -98,9 +102,11 @@ class PeriodResolutionTest : ResolutionTest() {
     fun backwardPeriodConstructionFails() {
         assertThrows<IllegalArgumentException> {
             Pair(
-                    ZonedDateTime.of(LocalDate.of(2019, Month.JANUARY, 1), startingHour, ZoneId.systemDefault()),
-                    ZonedDateTime.of(LocalDate.of(2018, Month.JANUARY, 1), endingHour, ZoneId.systemDefault()))
-                    .notedResolvedPeriod()
+                ZonedDateTime.of(LocalDate.of(2019, Month.JANUARY, 1), startingHour, ZoneId.systemDefault()),
+                ZonedDateTime.of(LocalDate.of(2018, Month.JANUARY, 1), endingHour, ZoneId.systemDefault())
+            )
+                .notedResolvedPeriod()
         }
     }
+
 }

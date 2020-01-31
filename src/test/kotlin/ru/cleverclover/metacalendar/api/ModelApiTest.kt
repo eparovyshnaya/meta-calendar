@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 CleverClover
+ * Copyright (c) 2019, 2020 CleverClover
  *
  * This program and the accompanying materials are made available under the
  * terms of the MIT which is available at
@@ -20,6 +20,7 @@ import ru.cleverclover.metacalendar.Period
 import java.time.Month
 
 class ModelApiTest {
+
     @Test
     fun addPeriod() {
         assert(1 == calendarOfOnePeriod(period()).size())
@@ -32,10 +33,11 @@ class ModelApiTest {
 
     @Test
     fun removePeriod() {
-        assert(0 == calendarOfOnePeriod(period()).also { it.removePeriod(period()) }.size())
+        assert(0 == calendarOfOnePeriod(period()).also { it.remove(period()) }.size())
     }
 
     private fun period() = Period(DayOfMonth(Month.JANUARY, 1), DayOfMonth(Month.JANUARY, 31))
 
     private fun calendarOfOnePeriod(period: Period) = MetaCalendar(setOf(period))
+
 }

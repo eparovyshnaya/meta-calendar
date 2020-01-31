@@ -7,7 +7,7 @@
 
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/eparovyshnaya/meta-calendar/blob/master/LICENSE)
 
-[![Release](https://img.shields.io/badge/Release-Latest%201.0.1-pink.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
+[![Release](https://img.shields.io/badge/Release-Latest%202.0.0-pink.svg)](https://github.com/eparovyshnaya/meta-calendar/releases/latest)
 
 ## what is it all about
 _Meta-calendar_ is sort of a data structure with a plain API to handle time *period*s.

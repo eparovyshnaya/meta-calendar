@@ -29,45 +29,37 @@ class CalendarResolutionTest : ResolutionTest() {
         val (year, zone) = Pair(2019, ZoneId.systemDefault())
         val note = "Cross a year"
         assert(
-            MetaCalendar()
-            .apply {
-                add(
-                    Period(
-                        DayOfMonth(
-                            Month.JANUARY,
-                            1
-                        ), DayOfMonth(Month.JANUARY, 21)
-                    )
+            MetaCalendar(
+                Period(
+                    DayOfMonth(Month.JANUARY, 1),
+                    DayOfMonth(Month.JANUARY, 21)
+                ),
+                Period(
+                    DayOfMonth(Month.NOVEMBER, 21),
+                    DayOfMonth(Month.JANUARY, 12), note
                 )
-                add(
-                    Period(
-                        DayOfMonth(
-                            Month.NOVEMBER,
-                            21
-                        ), DayOfMonth(Month.JANUARY, 12), note
+            )
+                .resolve(year)
+                .periods()
+                    ==
+                    setOf(
+                        Pair(
+                            start(year, Month.JANUARY, 1, zone),
+                            end(year, Month.JANUARY, 21, zone)
+                        )
+                            .notedResolvedPeriod(),
+                        Pair(
+                            start(year, Month.NOVEMBER, 21, zone),
+                            end(year + 1, Month.JANUARY, 12, zone)
+                        )
+                            .notedResolvedPeriod(note),
+                        NotedResolvedPeriod(
+                            start(year - 1, Month.NOVEMBER, 21, zone),
+                            end(year, Month.JANUARY, 12, zone),
+                            note
+                        )
                     )
-                )
-            }
-            .resolve(year)
-            .periods()
-                ==
-                setOf(
-                    Pair(
-                        start(year, Month.JANUARY, 1, zone),
-                        end(year, Month.JANUARY, 21, zone)
-                    )
-                        .notedResolvedPeriod(),
-                    Pair(
-                        start(year, Month.NOVEMBER, 21, zone),
-                        end(year + 1, Month.JANUARY, 12, zone)
-                    )
-                        .notedResolvedPeriod(note),
-                    NotedResolvedPeriod(
-                        start(year - 1, Month.NOVEMBER, 21, zone),
-                        end(year, Month.JANUARY, 12, zone),
-                        note
-                    )
-                ))
+        )
     }
 
     @Test
@@ -75,15 +67,12 @@ class CalendarResolutionTest : ResolutionTest() {
         val zone = ZoneId.systemDefault()
 
         // given: we have a calendar of a single cross-year period
-        val calendar = MetaCalendar()
-            .apply { add(
-                Period(
-                    DayOfMonth(
-                        Month.DECEMBER,
-                        31
-                    ), DayOfMonth(Month.JANUARY, 1)
-                )
-            ) }
+        val calendar = MetaCalendar(
+            Period(
+                DayOfMonth(Month.DECEMBER, 31),
+                DayOfMonth(Month.JANUARY, 1)
+            )
+        )
 
         // when: we resolve it to a couple of subsequent years
         val periods = calendar.resolve(setOf(2019, 2020)).periods()

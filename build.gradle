@@ -135,7 +135,7 @@ publishing {
                 }
                 scm {
                     connection = 'scm:git:git://github.com/eparovyshnaya/meta-calendar.git'
-                    developerConnection = 'scm:git:ssh://github.com/eparovyshnaya/meta-calendar.gitt'
+                    developerConnection = 'scm:git:ssh://github.com/eparovyshnaya/meta-calendar.git'
                     url = 'https://github.com/eparovyshnaya/meta-calendar'
                 }
                 repositories {
